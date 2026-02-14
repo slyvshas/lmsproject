@@ -1,0 +1,438 @@
+/* ============================================================================
+   Course Analytics Styles
+   ============================================================================ */
+
+.analytics-page {
+  min-height: calc(100vh - 64px);
+  background: var(--bg-primary, #0f0f23);
+  color: var(--text-primary, #f1f5f9);
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Loading & Error ── */
+.analytics-loading,
+.analytics-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: var(--text-secondary, #94a3b8);
+}
+
+.analytics-loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color, #1e293b);
+  border-top-color: var(--primary, #6366f1);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.analytics-error button {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary, #6366f1);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ── Header ── */
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.btn-back-analytics {
+  background: none;
+  border: none;
+  color: var(--primary, #6366f1);
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+
+.btn-back-analytics:hover {
+  text-decoration: underline;
+}
+
+.analytics-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.analytics-subtitle {
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+.btn-edit-course {
+  padding: 0.6rem 1.25rem;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid var(--primary, #6366f1);
+  color: var(--primary, #6366f1);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-edit-course:hover {
+  background: rgba(99, 102, 241, 0.25);
+}
+
+/* ── Stats Row ── */
+.analytics-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.analytics-stat-card {
+  background: var(--bg-secondary, #1a1a2e);
+  border: 1px solid var(--border-color, #1e293b);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.stat-icon-circle.blue { background: rgba(59, 130, 246, 0.15); }
+.stat-icon-circle.green { background: rgba(16, 185, 129, 0.15); }
+.stat-icon-circle.purple { background: rgba(168, 85, 247, 0.15); }
+.stat-icon-circle.orange { background: rgba(245, 158, 11, 0.15); }
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+}
+
+/* ── Sections ── */
+.analytics-section {
+  background: var(--bg-secondary, #1a1a2e);
+  border: 1px solid var(--border-color, #1e293b);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.analytics-section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Progress Chart ── */
+.progress-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.progress-band {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.band-label {
+  width: 70px;
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  text-align: right;
+}
+
+.band-bar-track {
+  flex: 1;
+  height: 24px;
+  background: var(--bg-primary, #0f0f23);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.band-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  min-width: 2px;
+}
+
+.band-count {
+  width: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary, #f1f5f9);
+}
+
+/* ── Tabs ── */
+.analytics-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.analytics-tab {
+  padding: 0.6rem 1.25rem;
+  background: var(--bg-secondary, #1a1a2e);
+  border: 1px solid var(--border-color, #1e293b);
+  color: var(--text-secondary, #94a3b8);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.analytics-tab:hover {
+  border-color: var(--primary, #6366f1);
+  color: var(--text-primary, #f1f5f9);
+}
+
+.analytics-tab.active {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: var(--primary, #6366f1);
+  color: var(--primary, #6366f1);
+  font-weight: 600;
+}
+
+/* ── Students Table ── */
+.students-table-wrapper {
+  overflow-x: auto;
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.students-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted, #64748b);
+  border-bottom: 1px solid var(--border-color, #1e293b);
+}
+
+.students-table td {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border-color, #1e293b);
+  color: var(--text-secondary, #cbd5e1);
+}
+
+.students-table tr:hover td {
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.student-cell {
+  min-width: 200px;
+}
+
+.student-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.student-name {
+  font-weight: 600;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.student-email {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+}
+
+.mini-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mini-progress-bar {
+  width: 80px;
+  height: 6px;
+  background: var(--bg-primary, #0f0f23);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary, #6366f1), var(--secondary, #a855f7));
+  border-radius: 6px;
+}
+
+.mini-progress span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  min-width: 35px;
+}
+
+.date-cell {
+  white-space: nowrap;
+}
+
+.status-pill {
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pill.completed {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.status-pill.active {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+/* ── Quiz Stats ── */
+.quiz-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.quiz-stat-card {
+  background: var(--bg-primary, #0f0f23);
+  border: 1px solid var(--border-color, #1e293b);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.quiz-stat-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.quiz-stat-metrics {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.quiz-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.quiz-metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #f1f5f9);
+}
+
+.quiz-metric-value.good { color: #10b981; }
+.quiz-metric-value.bad { color: #ef4444; }
+
+.quiz-metric-label {
+  font-size: 0.72rem;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+}
+
+.quiz-pass-bar {
+  height: 6px;
+  background: rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.quiz-pass-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #6ee7b7);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+/* ── Empty ── */
+.empty-analytics {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-muted, #64748b);
+}
+
+.empty-analytics p:first-child {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-hint {
+  font-size: 0.9rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .analytics-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .analytics-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .analytics-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .analytics-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-tabs {
+    flex-wrap: wrap;
+  }
+}

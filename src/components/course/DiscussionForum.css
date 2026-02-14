@@ -1,0 +1,204 @@
+/* ============================================================================
+   Discussion Forum - Dark Theme
+   ============================================================================ */
+
+.discussion-forum {
+  padding: 2rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.forum-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.forum-header h2 {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+/* Filters */
+.forum-filters {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 2rem;
+  padding: 0.25rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.filter-btn {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.filter-btn.active {
+  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+/* New Discussion Form */
+.new-discussion-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(12px);
+}
+
+.new-discussion-form h3 {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary);
+}
+
+.new-discussion-form input,
+.new-discussion-form textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+.new-discussion-form input:focus,
+.new-discussion-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.new-discussion-form textarea {
+  resize: vertical;
+}
+
+/* Discussions List */
+.discussions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.no-discussions {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.discussion-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.discussion-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.discussion-card.pinned {
+  border-left: 3px solid var(--warm);
+  background: rgba(245, 158, 11, 0.04);
+}
+
+.pinned-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warm-light);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.discussion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.discussion-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.answered-badge {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--emerald-light);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.discussion-preview {
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.discussion-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.discussion-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.discussion-stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .forum-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .forum-header button { width: 100%; }
+  .forum-filters { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .filter-btn { white-space: nowrap; }
+  .discussion-meta { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
