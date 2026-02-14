@@ -1,70 +1,192 @@
-# GitHub Codespaces ♥️ React
+# 🎓 LMS Pro – AI-Powered Learning Management System
 
-Welcome to your shiny new Codespace running React! We've got everything fired up and running for you to explore React.
+LMS Pro is a modern, full‑stack Learning Management System built with **React**, **Vite**, and **Supabase**. It provides role‑based access for **Students**, **Instructors**, and **Admins**, with adaptive quizzes, progress tracking, and analytics.
 
-You've got a blank canvas to work on from a git perspective as well. There's a single initial commit with the what you're seeing right now - where you go from here is up to you!
+This README gives a complete overview so that someone new can understand, run, and evaluate your project.
 
-Everything you do here is contained within this one codespace. There is no repository on GitHub yet. If and when you’re ready you can click "Publish Branch" and we’ll create your repository and push up your project. If you were just exploring then and have no further need for this code then you can simply delete your codespace and it's gone forever.
+---
 
-This project was bootstrapped for you with [Vite](https://vitejs.dev/).
+## ✨ Features
 
-## Available Scripts
+- Multi‑role authentication (Student, Instructor, Admin)
+- Email/password login and signup via Supabase
+- Role‑based protected routes (only allowed roles can access certain pages)
+- Course catalog with enrollment and progress tracking
+- Instructor tools to create and manage courses, modules, and lessons
+- Adaptive quiz engine that adjusts difficulty based on performance
+- Weak‑area detection and personalized recommendations
+- Student dashboard with progress, stats, and recommendations
+- Instructor and admin dashboards with high‑level analytics
+- Responsive UI with modern design and loading/error states
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🧱 Tech Stack
 
-We've already run this for you in the `Codespaces: server` terminal window below. If you need to stop the server for any reason you can just run `npm start` again to bring it back online.
+- **Frontend:** React 18, Vite, React Router, CSS Modules
+- **Backend as a Service:** Supabase (PostgreSQL, Auth, RLS)
+- **Language:** JavaScript (ES2020+)
+- **State Management:** React Context + custom hooks
+- **Build/Test:** Vite, npm
 
-Runs the app in the development mode.\
-Open [http://localhost:3000/](http://localhost:3000/) in the built-in Simple Browser (`Cmd/Ctrl + Shift + P > Simple Browser: Show`) to view your running application.
+---
 
-The page will reload automatically when you make changes.\
-You may also see any lint errors in the console.
+## 📂 Main Project Structure
 
-### `npm test`
+```bash
+src/
+├── App.jsx                 # Main app and routes
+├── index.jsx               # React entry point
+├── config/
+│   └── supabase.js         # Supabase client
+├── context/
+│   └── AuthContext.jsx     # Auth provider and role logic
+├── hooks/
+│   ├── useAuth.js          # Access auth state and helpers
+│   └── useSupabaseQuery.js # Generic Supabase query hook
+├── services/
+│   ├── courseService.js
+│   ├── quizService.js
+│   ├── progressService.js
+│   └── ...                 # Other domain services
+├── components/
+│   ├── common/             # Navbar, ErrorBoundary, etc.
+│   └── styles/             # Component styles (CSS modules)
+├── pages/
+│   ├── Home.jsx
+│   ├── ProfilePage.jsx
+│   ├── auth/               # Login, Signup
+│   ├── student/            # StudentDashboard, Course views
+│   ├── instructor/         # InstructorDashboard, CourseEditor, etc.
+│   ├── admin/              # AdminDashboard
+│   └── styles/             # Page‑level CSS modules
+└── utils/
+	└── helpers.js          # Reusable utilities
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Database- and documentation‑specific files live at the project root:
 
-### `npm run build`
+- `DATABASE_SCHEMA.sql` – complete PostgreSQL schema (15+ tables)
+- `RLS_POLICIES.sql` – Row Level Security policies
+- `ADAPTIVE_LEARNING.md`, `IMPLEMENTATION_GUIDE.md`, `PROJECT_SUMMARY.md`, `QUICK_START.md`, `FULL_README.md` – detailed docs
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🚀 Getting Started
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 1. Prerequisites
 
-## Learn More
+- Node.js **16+**
+- npm
+- Supabase account (free tier is enough)
 
-You can learn more in the [Vite documentation](https://vitejs.dev/guide/).
+### 2. Install Dependencies
 
-To learn Vitest, a Vite-native testing framework, go to [Vitest documentation](https://vitest.dev/guide/)
+```bash
+npm install
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 3. Create a Supabase Project
 
-### Code Splitting
+1. Go to https://supabase.com and create a new project.
+2. Wait for the database and API to be initialized.
+3. Note your **Project URL** and **anon public key** from Project Settings → API.
 
-This section has moved here: [https://sambitsahoo.com/blog/vite-code-splitting-that-works.html](https://sambitsahoo.com/blog/vite-code-splitting-that-works.html)
+### 4. Initialize the Database
 
-### Analyzing the Bundle Size
+In the Supabase Dashboard:
 
-This section has moved here: [https://github.com/btd/rollup-plugin-visualizer#rollup-plugin-visualizer](https://github.com/btd/rollup-plugin-visualizer#rollup-plugin-visualizer)
+1. Open **SQL Editor** → **New Query**.
+2. Paste the contents of `DATABASE_SCHEMA.sql` and **Run**.
+3. Create another **New Query**.
+4. Paste the contents of `RLS_POLICIES.sql` and **Run**.
 
-### Making a Progressive Web App
+You should see success messages and all tables/RLS policies applied.
 
-This section has moved here: [https://dev.to/hamdankhan364/simplifying-progressive-web-app-pwa-development-with-vite-a-beginners-guide-38cf](https://dev.to/hamdankhan364/simplifying-progressive-web-app-pwa-development-with-vite-a-beginners-guide-38cf)
+### 5. Configure Environment Variables
 
-### Advanced Configuration
+Create an `.env.local` file in the project root (you can copy from the example if present):
 
-This section has moved here: [https://vitejs.dev/guide/build.html#advanced-base-options](https://vitejs.dev/guide/build.html#advanced-base-options)
+```bash
+cp .env.local.example .env.local
+```
 
-### Deployment
+Then edit `.env.local`:
 
-This section has moved here: [https://vitejs.dev/guide/build.html](https://vitejs.dev/guide/build.html)
+```bash
+VITE_SUPABASE_URL=https://YOUR-PROJECT-ID.supabase.co
+VITE_SUPABASE_ANON_KEY=YOUR-ANON-PUBLIC-KEY
+```
 
-### Troubleshooting
+> Do not commit `.env.local` to version control.
 
-This section has moved here: [https://vitejs.dev/guide/troubleshooting.html](https://vitejs.dev/guide/troubleshooting.html)
+### 6. Run the App in Development
+
+```bash
+npm start
+```
+
+Open http://localhost:3000 in your browser. The app will reload when you save changes.
+
+---
+
+## 👥 User Roles & Flows
+
+### Student
+
+- Sign up / log in
+- Browse published courses and enroll
+- View **Student Dashboard** with progress cards
+- Open a course, navigate lessons, and mark them complete
+- Take quizzes; difficulty adapts based on performance
+- See weak topics and recommendations
+
+### Instructor
+
+- Log in with an instructor role (role set via database or admin panel)
+- Access **Instructor Dashboard**
+- Create and manage courses, modules, and lessons
+- View enrolled students and their progress
+- Review quiz performance statistics
+
+### Admin
+
+- Log in with admin role
+- Access **Admin Dashboard**
+- View platform‑wide stats and recent activity
+- Manage user roles and basic moderation tasks
+
+---
+
+## 🧠 Adaptive Learning (High Level)
+
+- Quiz difficulty adapts from **easy → medium → hard** based on previous scores.
+- Scores below a threshold (e.g., 60%) mark the related topic as a **weak area**.
+- Weak areas are stored and surfaced in the student dashboard for revision.
+- High scores can unlock harder content and contribute to certificate eligibility.
+
+For a deeper technical explanation of the adaptive logic, see `ADAPTIVE_LEARNING.md`.
+
+---
+
+## 🧪 Scripts
+
+- `npm start` – Run the development server (Vite)
+- `npm run build` – Build for production
+- `npm test` – Run tests (if configured)
+
+---
+
+## 📄 License
+
+See [LICENSE](LICENSE) for licensing information.
+
+---
+
+## 🙋 Project Overview for Reports
+
+If you are using **LMS Pro** for an academic or internship report, you can describe it as:
+
+> “A web‑based Learning Management System that supports students, instructors, and administrators, with features for course management, adaptive quizzes, progress tracking, and analytics, built using React, Vite, and Supabase.”
+
+For more detailed write‑ups (introduction, methodology, results, etc.), you can reuse and adapt content from this README plus the other markdown files in the repository.
