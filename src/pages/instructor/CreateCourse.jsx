@@ -8,7 +8,533 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { createCourse } from '../../services/courseService';
-import '../styles/CreateCourse.module.css';
+
+// ============================================================================
+// Inline Styles
+// ============================================================================
+const styles = {
+  page: {
+    display: 'flex',
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)',
+    color: '#fff',
+  },
+  sidebar: {
+    width: '280px',
+    background: 'rgba(30, 30, 60, 0.8)',
+    borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+    padding: '24px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  sidebarHeader: {
+    marginBottom: '32px',
+  },
+  btnBack: {
+    background: 'transparent',
+    border: 'none',
+    color: '#94a3b8',
+    cursor: 'pointer',
+    fontSize: '14px',
+    padding: '8px 0',
+    marginBottom: '8px',
+  },
+  sidebarTitle: {
+    fontSize: '24px',
+    fontWeight: '700',
+    color: '#fff',
+    margin: 0,
+  },
+  stepNav: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    flex: 1,
+  },
+  stepNavItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '12px 16px',
+    background: 'transparent',
+    border: '1px solid transparent',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    transition: 'all 0.2s ease',
+    color: '#94a3b8',
+  },
+  stepNavItemActive: {
+    background: 'rgba(99, 102, 241, 0.2)',
+    borderColor: 'rgba(99, 102, 241, 0.5)',
+    color: '#fff',
+  },
+  stepNavItemCompleted: {
+    color: '#10b981',
+  },
+  stepIndicator: {
+    fontSize: '20px',
+    width: '32px',
+    textAlign: 'center',
+  },
+  stepLabel: {
+    fontSize: '15px',
+    fontWeight: '500',
+  },
+  sidebarFooter: {
+    marginTop: 'auto',
+    paddingTop: '24px',
+  },
+  progressBar: {
+    height: '4px',
+    background: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: '2px',
+    overflow: 'hidden',
+    marginBottom: '8px',
+  },
+  progressFill: {
+    height: '100%',
+    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+    borderRadius: '2px',
+    transition: 'width 0.3s ease',
+  },
+  progressText: {
+    fontSize: '13px',
+    color: '#94a3b8',
+  },
+  main: {
+    flex: 1,
+    padding: '40px',
+    overflowY: 'auto',
+  },
+  wizardContent: {
+    maxWidth: '800px',
+    margin: '0 auto',
+  },
+  stepContent: {
+    marginBottom: '32px',
+  },
+  stepIntro: {
+    marginBottom: '32px',
+  },
+  stepIntroH2: {
+    fontSize: '28px',
+    fontWeight: '700',
+    color: '#fff',
+    marginBottom: '8px',
+  },
+  stepIntroP: {
+    fontSize: '16px',
+    color: '#94a3b8',
+    margin: 0,
+  },
+  formGroup: {
+    marginBottom: '24px',
+  },
+  label: {
+    display: 'block',
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#94a3b8',
+    marginBottom: '8px',
+  },
+  required: {
+    color: '#ef4444',
+    marginLeft: '4px',
+  },
+  input: {
+    width: '100%',
+    padding: '14px 16px',
+    fontSize: '15px',
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '10px',
+    color: '#fff',
+    outline: 'none',
+    transition: 'border-color 0.2s ease',
+    boxSizing: 'border-box',
+  },
+  textarea: {
+    width: '100%',
+    padding: '14px 16px',
+    fontSize: '15px',
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '10px',
+    color: '#fff',
+    outline: 'none',
+    resize: 'vertical',
+    fontFamily: 'inherit',
+    boxSizing: 'border-box',
+  },
+  select: {
+    width: '100%',
+    padding: '14px 16px',
+    fontSize: '15px',
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '10px',
+    color: '#fff',
+    outline: 'none',
+    cursor: 'pointer',
+    boxSizing: 'border-box',
+  },
+  fieldMeta: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '8px',
+  },
+  hint: {
+    fontSize: '13px',
+    color: '#64748b',
+  },
+  charCount: {
+    fontSize: '13px',
+    color: '#64748b',
+  },
+  charCountWarn: {
+    color: '#f59e0b',
+  },
+  formRow: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '20px',
+  },
+  difficultyCards: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '12px',
+  },
+  difficultyCard: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '20px 16px',
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '2px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '12px',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    textAlign: 'center',
+  },
+  difficultyCardActive: {
+    borderColor: '#6366f1',
+    background: 'rgba(99, 102, 241, 0.15)',
+  },
+  diffIcon: {
+    fontSize: '32px',
+    marginBottom: '8px',
+  },
+  diffLabel: {
+    fontSize: '15px',
+    fontWeight: '600',
+    color: '#fff',
+    marginBottom: '4px',
+  },
+  diffDesc: {
+    fontSize: '12px',
+    color: '#94a3b8',
+  },
+  fieldDescription: {
+    fontSize: '14px',
+    color: '#64748b',
+    marginBottom: '12px',
+    marginTop: 0,
+  },
+  dynamicList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+  },
+  dynamicListItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  listNumber: {
+    width: '28px',
+    height: '28px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(99, 102, 241, 0.2)',
+    borderRadius: '50%',
+    fontSize: '13px',
+    fontWeight: '600',
+    color: '#8b5cf6',
+    flexShrink: 0,
+  },
+  btnRemoveItem: {
+    width: '32px',
+    height: '32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(239, 68, 68, 0.2)',
+    border: 'none',
+    borderRadius: '8px',
+    color: '#ef4444',
+    fontSize: '18px',
+    cursor: 'pointer',
+    flexShrink: 0,
+  },
+  btnAddItem: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '10px 16px',
+    background: 'transparent',
+    border: '1px dashed rgba(99, 102, 241, 0.5)',
+    borderRadius: '10px',
+    color: '#8b5cf6',
+    fontSize: '14px',
+    cursor: 'pointer',
+    marginTop: '8px',
+  },
+  tagsPreview: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    marginTop: '12px',
+  },
+  tagChip: {
+    padding: '6px 12px',
+    background: 'rgba(99, 102, 241, 0.2)',
+    borderRadius: '20px',
+    fontSize: '13px',
+    color: '#a5b4fc',
+  },
+  thumbnailPreview: {
+    marginTop: '12px',
+    borderRadius: '10px',
+    overflow: 'hidden',
+    maxWidth: '300px',
+  },
+  thumbnailImg: {
+    width: '100%',
+    height: 'auto',
+    display: 'block',
+  },
+  pricingToggle: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '12px',
+    marginBottom: '16px',
+  },
+  pricingOption: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '20px',
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '2px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '12px',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    textAlign: 'center',
+  },
+  pricingOptionActive: {
+    borderColor: '#6366f1',
+    background: 'rgba(99, 102, 241, 0.15)',
+  },
+  pricingIcon: {
+    fontSize: '28px',
+    marginBottom: '8px',
+  },
+  pricingLabel: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#fff',
+    marginBottom: '4px',
+  },
+  pricingDesc: {
+    fontSize: '13px',
+    color: '#94a3b8',
+  },
+  priceInputWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    maxWidth: '200px',
+  },
+  currencySymbol: {
+    fontSize: '18px',
+    fontWeight: '600',
+    color: '#94a3b8',
+  },
+  previewCard: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '12px',
+    overflow: 'hidden',
+  },
+  previewThumbnail: {
+    maxHeight: '200px',
+    overflow: 'hidden',
+  },
+  previewThumbnailImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  previewHeader: {
+    padding: '24px',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  previewBadges: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    marginBottom: '16px',
+  },
+  previewBadge: {
+    padding: '4px 10px',
+    fontSize: '12px',
+    fontWeight: '600',
+    borderRadius: '20px',
+    background: 'rgba(99, 102, 241, 0.2)',
+    color: '#a5b4fc',
+  },
+  previewBadgeFree: {
+    background: 'rgba(16, 185, 129, 0.2)',
+    color: '#34d399',
+  },
+  previewBadgePrice: {
+    background: 'rgba(245, 158, 11, 0.2)',
+    color: '#fbbf24',
+  },
+  previewTitle: {
+    fontSize: '22px',
+    fontWeight: '700',
+    color: '#fff',
+    marginBottom: '8px',
+    margin: 0,
+  },
+  previewSubtitle: {
+    fontSize: '15px',
+    color: '#94a3b8',
+    margin: 0,
+    marginTop: '8px',
+  },
+  previewBody: {
+    padding: '24px',
+  },
+  previewSection: {
+    marginBottom: '24px',
+  },
+  previewSectionInline: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginBottom: '24px',
+  },
+  previewSectionH4: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#fff',
+    marginBottom: '12px',
+    margin: 0,
+  },
+  previewDescription: {
+    fontSize: '14px',
+    color: '#94a3b8',
+    lineHeight: '1.6',
+    whiteSpace: 'pre-wrap',
+    margin: 0,
+  },
+  previewList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  previewListItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+    fontSize: '14px',
+    color: '#d1d5db',
+  },
+  checkIcon: {
+    color: '#10b981',
+    fontWeight: '700',
+  },
+  prereqIcon: {
+    color: '#8b5cf6',
+  },
+  errorMessage: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    padding: '14px 18px',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
+    borderRadius: '10px',
+    color: '#fca5a5',
+    fontSize: '14px',
+    marginBottom: '24px',
+  },
+  wizardActions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: '24px',
+    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  actionsRight: {
+    marginLeft: 'auto',
+  },
+  btnSecondary: {
+    padding: '12px 24px',
+    fontSize: '15px',
+    fontWeight: '600',
+    background: 'transparent',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '10px',
+    color: '#fff',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  btnPrimary: {
+    padding: '12px 28px',
+    fontSize: '15px',
+    fontWeight: '600',
+    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+    border: 'none',
+    borderRadius: '10px',
+    color: '#fff',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  btnCreate: {
+    padding: '14px 32px',
+    fontSize: '16px',
+    fontWeight: '700',
+    background: 'linear-gradient(135deg, #10b981, #059669)',
+    border: 'none',
+    borderRadius: '10px',
+    color: '#fff',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  spinner: {
+    width: '18px',
+    height: '18px',
+    border: '2px solid rgba(255, 255, 255, 0.3)',
+    borderTopColor: '#fff',
+    borderRadius: '50%',
+    animation: 'spin 0.8s linear infinite',
+  },
+  radioHidden: {
+    display: 'none',
+  },
+};
 
 const CATEGORIES = [
   'Web Development', 'Programming', 'Data Science', 'Design',
@@ -162,15 +688,15 @@ const CreateCourse = () => {
 
   // ---- Step content renderers ----
   const renderStep1 = () => (
-    <div className="step-content">
-      <div className="step-intro">
-        <h2>Let's start with the basics</h2>
-        <p>Give your course a compelling title and choose its category. This is what students see first.</p>
+    <div style={styles.stepContent}>
+      <div style={styles.stepIntro}>
+        <h2 style={styles.stepIntroH2}>Let's start with the basics</h2>
+        <p style={styles.stepIntroP}>Give your course a compelling title and choose its category. This is what students see first.</p>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="title">
-          Course Title <span className="required">*</span>
+      <div style={styles.formGroup}>
+        <label htmlFor="title" style={styles.label}>
+          Course Title <span style={styles.required}>*</span>
         </label>
         <input
           id="title"
@@ -181,18 +707,19 @@ const CreateCourse = () => {
           placeholder="e.g. Mastering React: From Zero to Production"
           disabled={isSubmitting}
           maxLength={100}
+          style={styles.input}
         />
-        <div className="field-meta">
-          <span className="hint">A clear, specific title performs best</span>
-          <span className={`char-count ${titleCharCount > 80 ? 'warn' : ''}`}>
+        <div style={styles.fieldMeta}>
+          <span style={styles.hint}>A clear, specific title performs best</span>
+          <span style={{...styles.charCount, ...(titleCharCount > 80 ? styles.charCountWarn : {})}}>
             {titleCharCount}/100
           </span>
         </div>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="short_description">
-          Short Description <span className="required">*</span>
+      <div style={styles.formGroup}>
+        <label htmlFor="short_description" style={styles.label}>
+          Short Description <span style={styles.required}>*</span>
         </label>
         <input
           id="short_description"
@@ -203,19 +730,20 @@ const CreateCourse = () => {
           placeholder="One-liner summary shown in course cards"
           disabled={isSubmitting}
           maxLength={160}
+          style={styles.input}
         />
-        <div className="field-meta">
-          <span className="hint">Appears on course cards and search results</span>
-          <span className={`char-count ${form.short_description.length > 140 ? 'warn' : ''}`}>
+        <div style={styles.fieldMeta}>
+          <span style={styles.hint}>Appears on course cards and search results</span>
+          <span style={{...styles.charCount, ...(form.short_description.length > 140 ? styles.charCountWarn : {})}}>
             {form.short_description.length}/160
           </span>
         </div>
       </div>
 
-      <div className="form-row">
-        <div className="form-group">
-          <label htmlFor="category">
-            Category <span className="required">*</span>
+      <div style={styles.formRow}>
+        <div style={styles.formGroup}>
+          <label htmlFor="category" style={styles.label}>
+            Category <span style={styles.required}>*</span>
           </label>
           <select
             id="category"
@@ -223,6 +751,7 @@ const CreateCourse = () => {
             value={form.category}
             onChange={handleChange}
             disabled={isSubmitting}
+            style={styles.select}
           >
             <option value="">Select category...</option>
             {CATEGORIES.map((cat) => (
@@ -231,14 +760,15 @@ const CreateCourse = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="language">Language</label>
+        <div style={styles.formGroup}>
+          <label htmlFor="language" style={styles.label}>Language</label>
           <select
             id="language"
             name="language"
             value={form.language}
             onChange={handleChange}
             disabled={isSubmitting}
+            style={styles.select}
           >
             <option value="English">English</option>
             <option value="Spanish">Spanish</option>
@@ -252,20 +782,23 @@ const CreateCourse = () => {
         </div>
       </div>
 
-      <div className="form-group">
-        <label>Difficulty Level <span className="required">*</span></label>
-        <div className="difficulty-cards">
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Difficulty Level <span style={styles.required}>*</span></label>
+        <div style={styles.difficultyCards}>
           {Object.entries(DIFFICULTY_META).map(([key, meta]) => (
             <button
               key={key}
               type="button"
-              className={`difficulty-card ${form.difficulty_level === key ? 'active' : ''}`}
+              style={{
+                ...styles.difficultyCard,
+                ...(form.difficulty_level === key ? styles.difficultyCardActive : {}),
+              }}
               onClick={() => setForm((prev) => ({ ...prev, difficulty_level: key }))}
               disabled={isSubmitting}
             >
-              <span className="diff-icon">{meta.icon}</span>
-              <span className="diff-label">{meta.label}</span>
-              <span className="diff-desc">{meta.desc}</span>
+              <span style={styles.diffIcon}>{meta.icon}</span>
+              <span style={styles.diffLabel}>{meta.label}</span>
+              <span style={styles.diffDesc}>{meta.desc}</span>
             </button>
           ))}
         </div>
@@ -274,15 +807,15 @@ const CreateCourse = () => {
   );
 
   const renderStep2 = () => (
-    <div className="step-content">
-      <div className="step-intro">
-        <h2>Describe your course</h2>
-        <p>Help students understand what they'll learn and what they need to know beforehand.</p>
+    <div style={styles.stepContent}>
+      <div style={styles.stepIntro}>
+        <h2 style={styles.stepIntroH2}>Describe your course</h2>
+        <p style={styles.stepIntroP}>Help students understand what they'll learn and what they need to know beforehand.</p>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="description">
-          Full Description <span className="required">*</span>
+      <div style={styles.formGroup}>
+        <label htmlFor="description" style={styles.label}>
+          Full Description <span style={styles.required}>*</span>
         </label>
         <textarea
           id="description"
@@ -293,35 +826,37 @@ const CreateCourse = () => {
           rows={8}
           disabled={isSubmitting}
           maxLength={2000}
+          style={styles.textarea}
         />
-        <div className="field-meta">
-          <span className="hint">Detailed descriptions improve enrollment rates</span>
-          <span className={`char-count ${charCount > 1800 ? 'warn' : ''}`}>
+        <div style={styles.fieldMeta}>
+          <span style={styles.hint}>Detailed descriptions improve enrollment rates</span>
+          <span style={{...styles.charCount, ...(charCount > 1800 ? styles.charCountWarn : {})}}>
             {charCount}/2000
           </span>
         </div>
       </div>
 
-      <div className="form-group">
-        <label>
-          Learning Objectives <span className="required">*</span>
+      <div style={styles.formGroup}>
+        <label style={styles.label}>
+          Learning Objectives <span style={styles.required}>*</span>
         </label>
-        <p className="field-description">What will students be able to do after completing this course?</p>
-        <div className="dynamic-list">
+        <p style={styles.fieldDescription}>What will students be able to do after completing this course?</p>
+        <div style={styles.dynamicList}>
           {form.learning_objectives.map((obj, i) => (
-            <div key={i} className="dynamic-list-item">
-              <span className="list-number">{i + 1}</span>
+            <div key={i} style={styles.dynamicListItem}>
+              <span style={styles.listNumber}>{i + 1}</span>
               <input
                 type="text"
                 value={obj}
                 onChange={(e) => handleListChange('learning_objectives', i, e.target.value)}
                 placeholder={`e.g. ${i === 0 ? 'Build production-ready React apps' : i === 1 ? 'Understand component lifecycle' : 'Write clean, maintainable code'}`}
                 disabled={isSubmitting}
+                style={{...styles.input, flex: 1}}
               />
               {form.learning_objectives.length > 1 && (
                 <button
                   type="button"
-                  className="btn-remove-item"
+                  style={styles.btnRemoveItem}
                   onClick={() => removeListItem('learning_objectives', i)}
                   title="Remove"
                 >
@@ -331,31 +866,32 @@ const CreateCourse = () => {
             </div>
           ))}
           {form.learning_objectives.length < 8 && (
-            <button type="button" className="btn-add-item" onClick={() => addListItem('learning_objectives')}>
+            <button type="button" style={styles.btnAddItem} onClick={() => addListItem('learning_objectives')}>
               + Add objective
             </button>
           )}
         </div>
       </div>
 
-      <div className="form-group">
-        <label>Prerequisites</label>
-        <p className="field-description">What should students know before starting? (Optional)</p>
-        <div className="dynamic-list">
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Prerequisites</label>
+        <p style={styles.fieldDescription}>What should students know before starting? (Optional)</p>
+        <div style={styles.dynamicList}>
           {form.prerequisites.map((pre, i) => (
-            <div key={i} className="dynamic-list-item">
-              <span className="list-number">{i + 1}</span>
+            <div key={i} style={styles.dynamicListItem}>
+              <span style={styles.listNumber}>{i + 1}</span>
               <input
                 type="text"
                 value={pre}
                 onChange={(e) => handleListChange('prerequisites', i, e.target.value)}
                 placeholder={`e.g. ${i === 0 ? 'Basic JavaScript knowledge' : 'Familiarity with HTML & CSS'}`}
                 disabled={isSubmitting}
+                style={{...styles.input, flex: 1}}
               />
               {form.prerequisites.length > 1 && (
                 <button
                   type="button"
-                  className="btn-remove-item"
+                  style={styles.btnRemoveItem}
                   onClick={() => removeListItem('prerequisites', i)}
                   title="Remove"
                 >
@@ -365,15 +901,15 @@ const CreateCourse = () => {
             </div>
           ))}
           {form.prerequisites.length < 6 && (
-            <button type="button" className="btn-add-item" onClick={() => addListItem('prerequisites')}>
+            <button type="button" style={styles.btnAddItem} onClick={() => addListItem('prerequisites')}>
               + Add prerequisite
             </button>
           )}
         </div>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="tags">Tags</label>
+      <div style={styles.formGroup}>
+        <label htmlFor="tags" style={styles.label}>Tags</label>
         <input
           id="tags"
           name="tags"
@@ -382,12 +918,13 @@ const CreateCourse = () => {
           onChange={handleChange}
           placeholder="react, javascript, frontend, hooks (comma-separated)"
           disabled={isSubmitting}
+          style={styles.input}
         />
-        <span className="hint">Helps students discover your course via search</span>
+        <span style={styles.hint}>Helps students discover your course via search</span>
         {form.tags && (
-          <div className="tags-preview">
+          <div style={styles.tagsPreview}>
             {form.tags.split(',').filter(t => t.trim()).map((tag, i) => (
-              <span key={i} className="tag-chip">{tag.trim()}</span>
+              <span key={i} style={styles.tagChip}>{tag.trim()}</span>
             ))}
           </div>
         )}
@@ -396,14 +933,14 @@ const CreateCourse = () => {
   );
 
   const renderStep3 = () => (
-    <div className="step-content">
-      <div className="step-intro">
-        <h2>Course settings</h2>
-        <p>Configure additional details like duration, pricing, and course image.</p>
+    <div style={styles.stepContent}>
+      <div style={styles.stepIntro}>
+        <h2 style={styles.stepIntroH2}>Course settings</h2>
+        <p style={styles.stepIntroP}>Configure additional details like duration, pricing, and course image.</p>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="thumbnail_url">Thumbnail URL</label>
+      <div style={styles.formGroup}>
+        <label htmlFor="thumbnail_url" style={styles.label}>Thumbnail URL</label>
         <input
           id="thumbnail_url"
           name="thumbnail_url"
@@ -412,21 +949,23 @@ const CreateCourse = () => {
           onChange={handleChange}
           placeholder="https://example.com/course-image.jpg"
           disabled={isSubmitting}
+          style={styles.input}
         />
-        <span className="hint">Recommended: 1280×720 pixels (16:9 ratio)</span>
+        <span style={styles.hint}>Recommended: 1280×720 pixels (16:9 ratio)</span>
         {form.thumbnail_url && (
-          <div className="thumbnail-preview">
+          <div style={styles.thumbnailPreview}>
             <img
               src={form.thumbnail_url}
               alt="Thumbnail preview"
+              style={styles.thumbnailImg}
               onError={(e) => { e.target.style.display = 'none'; }}
             />
           </div>
         )}
       </div>
 
-      <div className="form-group">
-        <label htmlFor="estimated_duration">Estimated Duration</label>
+      <div style={styles.formGroup}>
+        <label htmlFor="estimated_duration" style={styles.label}>Estimated Duration</label>
         <input
           id="estimated_duration"
           name="estimated_duration"
@@ -435,39 +974,48 @@ const CreateCourse = () => {
           onChange={handleChange}
           placeholder="e.g. 12 hours, 6 weeks"
           disabled={isSubmitting}
+          style={styles.input}
         />
-        <span className="hint">Approximate time to complete the course</span>
+        <span style={styles.hint}>Approximate time to complete the course</span>
       </div>
 
-      <div className="form-group">
-        <label>Pricing</label>
-        <div className="pricing-toggle">
-          <label className={`pricing-option ${form.is_free ? 'active' : ''}`}>
+      <div style={styles.formGroup}>
+        <label style={styles.label}>Pricing</label>
+        <div style={styles.pricingToggle}>
+          <label style={{
+            ...styles.pricingOption,
+            ...(form.is_free ? styles.pricingOptionActive : {}),
+          }}>
             <input
               type="radio"
               name="is_free"
               checked={form.is_free}
               onChange={() => setForm((p) => ({ ...p, is_free: true, price: '' }))}
+              style={styles.radioHidden}
             />
-            <span className="pricing-icon">🆓</span>
-            <span className="pricing-label">Free</span>
-            <span className="pricing-desc">Open to all students</span>
+            <span style={styles.pricingIcon}>🆓</span>
+            <span style={styles.pricingLabel}>Free</span>
+            <span style={styles.pricingDesc}>Open to all students</span>
           </label>
-          <label className={`pricing-option ${!form.is_free ? 'active' : ''}`}>
+          <label style={{
+            ...styles.pricingOption,
+            ...(!form.is_free ? styles.pricingOptionActive : {}),
+          }}>
             <input
               type="radio"
               name="is_free"
               checked={!form.is_free}
               onChange={() => setForm((p) => ({ ...p, is_free: false }))}
+              style={styles.radioHidden}
             />
-            <span className="pricing-icon">💰</span>
-            <span className="pricing-label">Paid</span>
-            <span className="pricing-desc">Set your own price</span>
+            <span style={styles.pricingIcon}>💰</span>
+            <span style={styles.pricingLabel}>Paid</span>
+            <span style={styles.pricingDesc}>Set your own price</span>
           </label>
         </div>
         {!form.is_free && (
-          <div className="price-input-wrapper">
-            <span className="currency-symbol">$</span>
+          <div style={styles.priceInputWrapper}>
+            <span style={styles.currencySymbol}>$</span>
             <input
               type="number"
               name="price"
@@ -477,6 +1025,7 @@ const CreateCourse = () => {
               min="0"
               step="0.01"
               disabled={isSubmitting}
+              style={styles.input}
             />
           </div>
         )}
@@ -491,77 +1040,78 @@ const CreateCourse = () => {
     const diff = DIFFICULTY_META[form.difficulty_level];
 
     return (
-      <div className="step-content">
-        <div className="step-intro">
-          <h2>Review & Create</h2>
-          <p>Everything look good? You can always edit these details later.</p>
+      <div style={styles.stepContent}>
+        <div style={styles.stepIntro}>
+          <h2 style={styles.stepIntroH2}>Review & Create</h2>
+          <p style={styles.stepIntroP}>Everything look good? You can always edit these details later.</p>
         </div>
 
-        <div className="preview-card">
+        <div style={styles.previewCard}>
           {form.thumbnail_url && (
-            <div className="preview-thumbnail">
+            <div style={styles.previewThumbnail}>
               <img src={form.thumbnail_url} alt="Course thumbnail"
+                style={styles.previewThumbnailImg}
                 onError={(e) => { e.target.style.display = 'none'; }} />
             </div>
           )}
-          <div className="preview-header">
-            <div className="preview-badges">
-              <span className="preview-badge category">{form.category}</span>
-              <span className="preview-badge difficulty">
+          <div style={styles.previewHeader}>
+            <div style={styles.previewBadges}>
+              <span style={styles.previewBadge}>{form.category}</span>
+              <span style={styles.previewBadge}>
                 {diff.icon} {diff.label}
               </span>
               {form.is_free ? (
-                <span className="preview-badge free">Free</span>
+                <span style={{...styles.previewBadge, ...styles.previewBadgeFree}}>Free</span>
               ) : (
-                <span className="preview-badge price">${form.price}</span>
+                <span style={{...styles.previewBadge, ...styles.previewBadgePrice}}>${form.price}</span>
               )}
-              <span className="preview-badge lang">{form.language}</span>
+              <span style={styles.previewBadge}>{form.language}</span>
             </div>
-            <h3 className="preview-title">{form.title}</h3>
-            <p className="preview-subtitle">{form.short_description}</p>
+            <h3 style={styles.previewTitle}>{form.title}</h3>
+            <p style={styles.previewSubtitle}>{form.short_description}</p>
           </div>
 
-          <div className="preview-body">
-            <div className="preview-section">
-              <h4>About This Course</h4>
-              <p className="preview-description">{form.description}</p>
+          <div style={styles.previewBody}>
+            <div style={styles.previewSection}>
+              <h4 style={styles.previewSectionH4}>About This Course</h4>
+              <p style={styles.previewDescription}>{form.description}</p>
             </div>
 
             {objectives.length > 0 && (
-              <div className="preview-section">
-                <h4>What You'll Learn</h4>
-                <ul className="preview-list objectives">
+              <div style={styles.previewSection}>
+                <h4 style={styles.previewSectionH4}>What You'll Learn</h4>
+                <ul style={styles.previewList}>
                   {objectives.map((o, i) => (
-                    <li key={i}><span className="check-icon">✓</span> {o}</li>
+                    <li key={i} style={styles.previewListItem}><span style={styles.checkIcon}>✓</span> {o}</li>
                   ))}
                 </ul>
               </div>
             )}
 
             {prereqs.length > 0 && (
-              <div className="preview-section">
-                <h4>Prerequisites</h4>
-                <ul className="preview-list prereqs">
+              <div style={styles.previewSection}>
+                <h4 style={styles.previewSectionH4}>Prerequisites</h4>
+                <ul style={styles.previewList}>
                   {prereqs.map((p, i) => (
-                    <li key={i}><span className="prereq-icon">→</span> {p}</li>
+                    <li key={i} style={styles.previewListItem}><span style={styles.prereqIcon}>→</span> {p}</li>
                   ))}
                 </ul>
               </div>
             )}
 
             {form.estimated_duration && (
-              <div className="preview-section inline">
-                <h4>⏱️ Estimated Duration</h4>
-                <span>{form.estimated_duration}</span>
+              <div style={styles.previewSectionInline}>
+                <h4 style={{...styles.previewSectionH4, marginBottom: 0}}>⏱️ Estimated Duration</h4>
+                <span style={{color: '#94a3b8'}}>{form.estimated_duration}</span>
               </div>
             )}
 
             {tags.length > 0 && (
-              <div className="preview-section">
-                <h4>Tags</h4>
-                <div className="tags-preview">
+              <div style={styles.previewSection}>
+                <h4 style={styles.previewSectionH4}>Tags</h4>
+                <div style={styles.tagsPreview}>
                   {tags.map((t, i) => (
-                    <span key={i} className="tag-chip">{t.trim()}</span>
+                    <span key={i} style={styles.tagChip}>{t.trim()}</span>
                   ))}
                 </div>
               </div>
@@ -575,67 +1125,74 @@ const CreateCourse = () => {
   const stepRenderers = { 1: renderStep1, 2: renderStep2, 3: renderStep3, 4: renderStep4 };
 
   return (
-    <div className="create-course-page">
+    <div style={styles.page}>
       {/* Sidebar progress */}
-      <aside className="wizard-sidebar">
-        <div className="sidebar-header">
-          <button onClick={() => navigate(-1)} className="btn-back">← Back</button>
-          <h2>Create Course</h2>
+      <aside style={styles.sidebar}>
+        <div style={styles.sidebarHeader}>
+          <button onClick={() => navigate(-1)} style={styles.btnBack}>← Back</button>
+          <h2 style={styles.sidebarTitle}>Create Course</h2>
         </div>
-        <nav className="step-nav">
+        <nav style={styles.stepNav}>
           {STEPS.map((step) => (
             <button
               key={step.id}
               type="button"
-              className={`step-nav-item ${currentStep === step.id ? 'active' : ''} ${currentStep > step.id ? 'completed' : ''}`}
+              style={{
+                ...styles.stepNavItem,
+                ...(currentStep === step.id ? styles.stepNavItemActive : {}),
+                ...(currentStep > step.id ? styles.stepNavItemCompleted : {}),
+              }}
               onClick={() => goToStep(step.id)}
             >
-              <span className="step-indicator">
+              <span style={styles.stepIndicator}>
                 {currentStep > step.id ? '✓' : step.icon}
               </span>
-              <span className="step-label">{step.label}</span>
+              <span style={styles.stepLabel}>{step.label}</span>
             </button>
           ))}
         </nav>
-        <div className="sidebar-footer">
-          <div className="progress-bar">
-            <div className="progress-fill" style={{ width: `${((currentStep - 1) / 3) * 100}%` }} />
+        <div style={styles.sidebarFooter}>
+          <div style={styles.progressBar}>
+            <div style={{ ...styles.progressFill, width: `${((currentStep - 1) / 3) * 100}%` }} />
           </div>
-          <span className="progress-text">Step {currentStep} of 4</span>
+          <span style={styles.progressText}>Step {currentStep} of 4</span>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="wizard-main">
-        <div className="wizard-content">
+      <main style={styles.main}>
+        <div style={styles.wizardContent}>
           {stepRenderers[currentStep]()}
 
           {error && (
-            <div className="error-message">
-              <span className="error-icon">⚠️</span> {error}
+            <div style={styles.errorMessage}>
+              <span>⚠️</span> {error}
             </div>
           )}
 
-          <div className="wizard-actions">
+          <div style={styles.wizardActions}>
             {currentStep > 1 && (
-              <button type="button" className="btn-secondary" onClick={prevStep} disabled={isSubmitting}>
+              <button type="button" style={styles.btnSecondary} onClick={prevStep} disabled={isSubmitting}>
                 ← Previous
               </button>
             )}
-            <div className="actions-right">
+            <div style={styles.actionsRight}>
               {currentStep < 4 ? (
-                <button type="button" className="btn-primary" onClick={nextStep}>
+                <button type="button" style={styles.btnPrimary} onClick={nextStep}>
                   Continue →
                 </button>
               ) : (
                 <button
                   type="button"
-                  className="btn-create"
+                  style={styles.btnCreate}
                   onClick={handleSubmit}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    <><span className="spinner" /> Creating Course...</>
+                    <>
+                      <span style={styles.spinner} />
+                      Creating Course...
+                    </>
                   ) : (
                     '🚀 Create Course & Add Content'
                   )}
@@ -645,6 +1202,13 @@ const CreateCourse = () => {
           </div>
         </div>
       </main>
+
+      {/* Keyframes for spinner animation */}
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };

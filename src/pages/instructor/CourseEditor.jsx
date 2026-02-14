@@ -18,7 +18,1131 @@ import {
   deleteLesson,
 } from '../../services/contentService';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import '../styles/CourseEditor.module.css';
+
+// ---- Inline Styles ----
+const styles = {
+  courseEditor: {
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)',
+    color: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  editorError: {
+    padding: '2rem',
+    textAlign: 'center',
+    color: '#ef4444',
+    fontSize: '1.2rem',
+  },
+  editorTopbar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0.75rem 1.5rem',
+    background: 'rgba(20, 20, 45, 0.95)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(10px)',
+    position: 'sticky',
+    top: 0,
+    zIndex: 100,
+  },
+  topbarLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+  },
+  btnBackEditor: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    color: '#94a3b8',
+    padding: '0.5rem 1rem',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+    transition: 'all 0.2s',
+  },
+  courseInfoBar: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+  },
+  courseInfoBarH2: {
+    fontSize: '1.1rem',
+    fontWeight: 600,
+    color: '#fff',
+    margin: 0,
+  },
+  pubBadge: {
+    padding: '0.25rem 0.75rem',
+    borderRadius: '20px',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+  },
+  pubBadgePublished: {
+    background: 'rgba(34, 197, 94, 0.2)',
+    color: '#22c55e',
+  },
+  pubBadgeDraft: {
+    background: 'rgba(234, 179, 8, 0.2)',
+    color: '#eab308',
+  },
+  topbarRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+  },
+  lessonCount: {
+    color: '#94a3b8',
+    fontSize: '0.85rem',
+  },
+  saveStatus: {
+    fontSize: '0.85rem',
+    padding: '0.25rem 0.5rem',
+    borderRadius: '4px',
+  },
+  saveStatusSuccess: {
+    color: '#22c55e',
+    background: 'rgba(34, 197, 94, 0.1)',
+  },
+  saveStatusError: {
+    color: '#ef4444',
+    background: 'rgba(239, 68, 68, 0.1)',
+  },
+  unsavedDot: {
+    color: '#eab308',
+    fontSize: '1.2rem',
+  },
+  btnPublish: {
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    border: 'none',
+    color: '#fff',
+    padding: '0.5rem 1.25rem',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontWeight: 600,
+    fontSize: '0.9rem',
+    transition: 'all 0.2s',
+  },
+  btnPublishUnpublish: {
+    background: 'rgba(239, 68, 68, 0.2)',
+    color: '#ef4444',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
+  },
+  editorLayout: {
+    display: 'flex',
+    flex: 1,
+    overflow: 'hidden',
+  },
+  editorSidebar: {
+    width: '320px',
+    minWidth: '280px',
+    background: 'rgba(20, 20, 45, 0.95)',
+    borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+  },
+  sidebarHeader: {
+    padding: '1rem 1.25rem',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  sidebarHeaderH3: {
+    margin: 0,
+    fontSize: '1rem',
+    fontWeight: 600,
+    color: '#fff',
+  },
+  modulesTree: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '0.5rem',
+  },
+  moduleTreeItem: {
+    marginBottom: '0.5rem',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    background: 'rgba(30, 30, 60, 0.5)',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+  },
+  moduleTreeHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0.75rem 1rem',
+    cursor: 'pointer',
+    transition: 'background 0.2s',
+    gap: '0.5rem',
+  },
+  collapseArrow: {
+    color: '#94a3b8',
+    fontSize: '0.8rem',
+    transition: 'transform 0.2s',
+  },
+  collapseArrowCollapsed: {
+    transform: 'rotate(-90deg)',
+  },
+  moduleTreeNumber: {
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    color: '#fff',
+    fontSize: '0.7rem',
+    fontWeight: 700,
+    padding: '0.2rem 0.5rem',
+    borderRadius: '4px',
+  },
+  moduleRenameInput: {
+    flex: 1,
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(99, 102, 241, 0.5)',
+    borderRadius: '4px',
+    padding: '0.25rem 0.5rem',
+    color: '#fff',
+    fontSize: '0.85rem',
+    outline: 'none',
+  },
+  moduleTreeTitle: {
+    flex: 1,
+    color: '#fff',
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  moduleActions: {
+    display: 'flex',
+    gap: '0.25rem',
+    opacity: 0,
+    transition: 'opacity 0.2s',
+  },
+  moduleActionsVisible: {
+    opacity: 1,
+  },
+  btnIconSm: {
+    background: 'transparent',
+    border: 'none',
+    color: '#94a3b8',
+    cursor: 'pointer',
+    padding: '0.25rem 0.4rem',
+    fontSize: '0.85rem',
+    borderRadius: '4px',
+    transition: 'all 0.2s',
+  },
+  btnIconSmDelete: {
+    color: '#ef4444',
+  },
+  lessonsTree: {
+    paddingLeft: '1rem',
+    paddingBottom: '0.5rem',
+  },
+  lessonTreeItem: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0.5rem 0.75rem',
+    marginBottom: '0.25rem',
+    cursor: 'pointer',
+    borderRadius: '6px',
+    transition: 'all 0.2s',
+    gap: '0.5rem',
+    background: 'rgba(30, 30, 60, 0.3)',
+  },
+  lessonTreeItemActive: {
+    background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%)',
+    border: '1px solid rgba(99, 102, 241, 0.5)',
+  },
+  lessonTreeIcon: {
+    fontSize: '0.85rem',
+  },
+  lessonTreeTitle: {
+    flex: 1,
+    fontSize: '0.85rem',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  lessonTreeDuration: {
+    fontSize: '0.75rem',
+    color: '#64748b',
+    marginRight: '0.25rem',
+  },
+  addLessonInline: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    padding: '0.5rem 0.75rem',
+    marginTop: '0.25rem',
+  },
+  addLessonInlineInput: {
+    flex: 1,
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(99, 102, 241, 0.5)',
+    borderRadius: '6px',
+    padding: '0.5rem 0.75rem',
+    color: '#fff',
+    fontSize: '0.85rem',
+    outline: 'none',
+  },
+  btnAddInline: {
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    border: 'none',
+    color: '#fff',
+    width: '32px',
+    height: '32px',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '1.2rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnAddLesson: {
+    background: 'transparent',
+    border: '1px dashed rgba(99, 102, 241, 0.5)',
+    color: '#6366f1',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+    width: '100%',
+    textAlign: 'center',
+    marginTop: '0.25rem',
+    transition: 'all 0.2s',
+  },
+  addModuleSection: {
+    padding: '1rem',
+    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+    display: 'flex',
+    gap: '0.5rem',
+  },
+  addModuleSectionInput: {
+    flex: 1,
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.5rem 0.75rem',
+    color: '#fff',
+    fontSize: '0.85rem',
+    outline: 'none',
+  },
+  btnAddModule: {
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    border: 'none',
+    color: '#fff',
+    padding: '0.5rem 1rem',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontWeight: 600,
+    fontSize: '0.85rem',
+    whiteSpace: 'nowrap',
+  },
+  editorMain: {
+    flex: 1,
+    overflow: 'auto',
+    padding: '1.5rem',
+  },
+  lessonEditor: {
+    maxWidth: '900px',
+    margin: '0 auto',
+  },
+  lessonEditorHeader: {
+    marginBottom: '1.5rem',
+  },
+  lessonTitleInput: {
+    width: '100%',
+    background: 'transparent',
+    border: 'none',
+    borderBottom: '2px solid rgba(99, 102, 241, 0.3)',
+    color: '#fff',
+    fontSize: '1.75rem',
+    fontWeight: 700,
+    padding: '0.5rem 0',
+    marginBottom: '1rem',
+    outline: 'none',
+    transition: 'border-color 0.2s',
+  },
+  lessonMetaRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1.5rem',
+    flexWrap: 'wrap',
+  },
+  durationLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    color: '#94a3b8',
+    fontSize: '0.9rem',
+  },
+  durationInput: {
+    width: '60px',
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.35rem 0.5rem',
+    color: '#fff',
+    fontSize: '0.9rem',
+    textAlign: 'center',
+    outline: 'none',
+  },
+  editorModeToggle: {
+    display: 'flex',
+    background: 'rgba(30, 30, 60, 0.8)',
+    borderRadius: '8px',
+    padding: '0.25rem',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  modeBtn: {
+    background: 'transparent',
+    border: 'none',
+    color: '#94a3b8',
+    padding: '0.4rem 0.75rem',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    transition: 'all 0.2s',
+  },
+  modeBtnActive: {
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    color: '#fff',
+  },
+  btnSaveLesson: {
+    background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+    border: 'none',
+    color: '#fff',
+    padding: '0.5rem 1.25rem',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontWeight: 600,
+    fontSize: '0.9rem',
+    marginLeft: 'auto',
+  },
+  lessonPreview: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    borderRadius: '12px',
+    padding: '2rem',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  previewLessonTitle: {
+    fontSize: '2rem',
+    fontWeight: 700,
+    color: '#fff',
+    marginBottom: '1.5rem',
+    paddingBottom: '1rem',
+    borderBottom: '2px solid rgba(99, 102, 241, 0.3)',
+  },
+  blocksEditor: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+  },
+  blockWrapper: {
+    position: 'relative',
+  },
+  blockInsertZone: {
+    position: 'relative',
+    padding: '0.5rem 0',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  btnInsertBlock: {
+    display: 'flex',
+    alignItems: 'center',
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    width: '100%',
+    opacity: 0.4,
+    transition: 'opacity 0.2s',
+    padding: '0.25rem 0',
+  },
+  insertLine: {
+    flex: 1,
+    height: '1px',
+    background: 'rgba(99, 102, 241, 0.3)',
+  },
+  insertIcon: {
+    color: '#6366f1',
+    fontSize: '1.25rem',
+    padding: '0 0.75rem',
+    fontWeight: 700,
+  },
+  blockMenu: {
+    position: 'absolute',
+    top: '100%',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'rgba(20, 20, 45, 0.98)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '12px',
+    padding: '1rem',
+    zIndex: 50,
+    minWidth: '400px',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
+    backdropFilter: 'blur(10px)',
+  },
+  blockMenuHeader: {
+    fontSize: '0.8rem',
+    color: '#94a3b8',
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    marginBottom: '0.75rem',
+    paddingBottom: '0.5rem',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  blockMenuGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '0.5rem',
+  },
+  blockMenuItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '0.5rem',
+    padding: '0.75rem',
+    background: 'rgba(30, 30, 60, 0.6)',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    textAlign: 'left',
+  },
+  bmiIcon: {
+    fontSize: '1.25rem',
+    lineHeight: 1,
+  },
+  bmiInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.15rem',
+  },
+  bmiLabel: {
+    fontSize: '0.85rem',
+    fontWeight: 600,
+    color: '#fff',
+  },
+  bmiDesc: {
+    fontSize: '0.7rem',
+    color: '#64748b',
+  },
+  emptyBlocks: {
+    textAlign: 'center',
+    padding: '3rem 2rem',
+    background: 'rgba(30, 30, 60, 0.5)',
+    borderRadius: '12px',
+    border: '1px dashed rgba(99, 102, 241, 0.3)',
+  },
+  emptyBlocksP: {
+    color: '#94a3b8',
+    marginBottom: '1.5rem',
+  },
+  blockMenuGridInitial: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '0.5rem',
+    maxWidth: '600px',
+    margin: '0 auto',
+  },
+  editorEmptyState: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    textAlign: 'center',
+    padding: '4rem 2rem',
+  },
+  emptyIcon: {
+    fontSize: '4rem',
+    marginBottom: '1.5rem',
+  },
+  emptyStateH2: {
+    fontSize: '1.75rem',
+    fontWeight: 700,
+    color: '#fff',
+    marginBottom: '0.75rem',
+  },
+  emptyStateP: {
+    fontSize: '1rem',
+    color: '#94a3b8',
+    marginBottom: '2rem',
+    maxWidth: '400px',
+  },
+  emptyTips: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '1rem',
+    maxWidth: '500px',
+  },
+  tipCard: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '0.75rem',
+    background: 'rgba(30, 30, 60, 0.8)',
+    padding: '1rem',
+    borderRadius: '10px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    textAlign: 'left',
+  },
+  tipCardSpan: {
+    fontSize: '1.5rem',
+  },
+  tipCardStrong: {
+    color: '#fff',
+    fontSize: '0.9rem',
+    display: 'block',
+    marginBottom: '0.25rem',
+  },
+  tipCardP: {
+    color: '#64748b',
+    fontSize: '0.8rem',
+    margin: 0,
+  },
+  blockEditor: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '10px',
+    overflow: 'hidden',
+    transition: 'border-color 0.2s, box-shadow 0.2s',
+  },
+  blockControls: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0.5rem 0.75rem',
+    background: 'rgba(15, 15, 35, 0.5)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+    opacity: 0,
+    transition: 'opacity 0.2s',
+  },
+  blockControlsVisible: {
+    opacity: 1,
+  },
+  blockTypeBadge: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.4rem',
+    fontSize: '0.75rem',
+    color: '#94a3b8',
+    fontWeight: 500,
+  },
+  blockControlButtons: {
+    display: 'flex',
+    gap: '0.25rem',
+  },
+  ctrlBtn: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    color: '#94a3b8',
+    padding: '0.25rem 0.5rem',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.8rem',
+    transition: 'all 0.2s',
+  },
+  ctrlBtnDanger: {
+    color: '#ef4444',
+    borderColor: 'rgba(239, 68, 68, 0.3)',
+  },
+  blockBody: {
+    padding: '0.75rem 1rem',
+  },
+  textBlockEditor: {
+    border: '1px solid transparent',
+    borderRadius: '6px',
+    transition: 'border-color 0.2s',
+  },
+  textBlockEditorFocused: {
+    borderColor: 'rgba(99, 102, 241, 0.5)',
+  },
+  textFormatBar: {
+    display: 'flex',
+    gap: '0.25rem',
+    marginBottom: '0.5rem',
+    paddingBottom: '0.5rem',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  fmtBtn: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    color: '#e2e8f0',
+    padding: '0.3rem 0.6rem',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    transition: 'all 0.2s',
+  },
+  fmtBtnMono: {
+    fontFamily: 'monospace',
+  },
+  textBlockTextarea: {
+    width: '100%',
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.75rem',
+    color: '#fff',
+    fontSize: '0.95rem',
+    lineHeight: 1.6,
+    resize: 'vertical',
+    outline: 'none',
+    minHeight: '100px',
+  },
+  headingBlockEditor: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+  },
+  headingLevelSelector: {
+    display: 'flex',
+    gap: '0.25rem',
+  },
+  levelBtn: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    color: '#94a3b8',
+    padding: '0.35rem 0.75rem',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    fontWeight: 600,
+    transition: 'all 0.2s',
+  },
+  levelBtnActive: {
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    color: '#fff',
+    borderColor: 'transparent',
+  },
+  headingInput: {
+    width: '100%',
+    background: 'transparent',
+    border: 'none',
+    borderBottom: '2px solid rgba(99, 102, 241, 0.3)',
+    color: '#fff',
+    fontWeight: 700,
+    padding: '0.5rem 0',
+    outline: 'none',
+  },
+  headingInputH1: { fontSize: '2rem' },
+  headingInputH2: { fontSize: '1.5rem' },
+  headingInputH3: { fontSize: '1.25rem' },
+  headingInputH4: { fontSize: '1rem' },
+  codeBlockEditor: {
+    background: 'rgba(15, 15, 35, 0.9)',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  codeHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0.5rem 0.75rem',
+    background: 'rgba(30, 30, 60, 0.5)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  langSelect: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '4px',
+    color: '#fff',
+    padding: '0.25rem 0.5rem',
+    fontSize: '0.8rem',
+    outline: 'none',
+    cursor: 'pointer',
+  },
+  codeLabel: {
+    fontSize: '0.75rem',
+    color: '#64748b',
+  },
+  codeTextarea: {
+    width: '100%',
+    background: 'transparent',
+    border: 'none',
+    padding: '1rem',
+    color: '#e2e8f0',
+    fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+    fontSize: '0.9rem',
+    lineHeight: 1.5,
+    resize: 'vertical',
+    outline: 'none',
+    minHeight: '120px',
+  },
+  imageBlockEditor: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+  },
+  imageInputs: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+  },
+  imgInputRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  inputIcon: {
+    fontSize: '1rem',
+    width: '24px',
+    textAlign: 'center',
+  },
+  imgUrlInput: {
+    flex: 1,
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.5rem 0.75rem',
+    color: '#fff',
+    fontSize: '0.9rem',
+    outline: 'none',
+  },
+  imagePreviewContainer: {
+    background: 'rgba(15, 15, 35, 0.5)',
+    borderRadius: '8px',
+    padding: '1rem',
+    textAlign: 'center',
+  },
+  imagePreviewImg: {
+    maxWidth: '100%',
+    maxHeight: '300px',
+    borderRadius: '6px',
+  },
+  imgError: {
+    color: '#ef4444',
+    padding: '2rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+  },
+  imgCaption: {
+    color: '#94a3b8',
+    fontSize: '0.85rem',
+    fontStyle: 'italic',
+    marginTop: '0.5rem',
+  },
+  videoBlockEditor: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+  },
+  videoInputRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  videoUrlInput: {
+    flex: 1,
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.5rem 0.75rem',
+    color: '#fff',
+    fontSize: '0.9rem',
+    outline: 'none',
+  },
+  videoEmbedContainer: {
+    background: 'rgba(15, 15, 35, 0.5)',
+    borderRadius: '8px',
+    overflow: 'hidden',
+  },
+  videoIframe: {
+    width: '100%',
+    aspectRatio: '16/9',
+    border: 'none',
+    borderRadius: '6px',
+  },
+  videoCaption: {
+    color: '#94a3b8',
+    fontSize: '0.85rem',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    padding: '0.5rem',
+    margin: 0,
+  },
+  videoError: {
+    color: '#ef4444',
+    padding: '2rem',
+    textAlign: 'center',
+  },
+  videoPlaceholder: {
+    padding: '3rem 2rem',
+    textAlign: 'center',
+    background: 'rgba(15, 15, 35, 0.5)',
+    borderRadius: '8px',
+    border: '1px dashed rgba(255, 255, 255, 0.2)',
+    color: '#64748b',
+  },
+  videoPlaceholderSpan: {
+    fontSize: '2.5rem',
+    display: 'block',
+    marginBottom: '0.5rem',
+  },
+  calloutBlockEditor: {
+    borderLeft: '4px solid',
+    borderRadius: '6px',
+    background: 'rgba(15, 15, 35, 0.5)',
+    padding: '0.75rem',
+  },
+  calloutTypeSelector: {
+    display: 'flex',
+    gap: '0.25rem',
+    marginBottom: '0.75rem',
+  },
+  calloutTypeBtn: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    padding: '0.35rem 0.6rem',
+    fontSize: '1rem',
+    transition: 'all 0.2s',
+  },
+  calloutTypeBtnActive: {
+    background: 'rgba(99, 102, 241, 0.3)',
+    borderColor: 'rgba(99, 102, 241, 0.5)',
+  },
+  calloutContentArea: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '0.75rem',
+  },
+  calloutIcon: {
+    fontSize: '1.25rem',
+    lineHeight: 1,
+    marginTop: '0.25rem',
+  },
+  calloutTextarea: {
+    flex: 1,
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.5rem 0.75rem',
+    color: '#fff',
+    fontSize: '0.9rem',
+    lineHeight: 1.5,
+    resize: 'vertical',
+    outline: 'none',
+  },
+  listBlockEditor: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+  },
+  listTypeToggle: {
+    display: 'flex',
+    gap: '0.25rem',
+  },
+  listTypeBtn: {
+    background: 'rgba(30, 30, 60, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    color: '#94a3b8',
+    padding: '0.35rem 0.75rem',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    transition: 'all 0.2s',
+  },
+  listTypeBtnActive: {
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    color: '#fff',
+    borderColor: 'transparent',
+  },
+  listItems: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+  },
+  listItemRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  listMarker: {
+    color: '#6366f1',
+    fontWeight: 700,
+    width: '20px',
+    textAlign: 'center',
+  },
+  listItemInput: {
+    flex: 1,
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.5rem 0.75rem',
+    color: '#fff',
+    fontSize: '0.9rem',
+    outline: 'none',
+  },
+  btnRemoveListItem: {
+    background: 'transparent',
+    border: 'none',
+    color: '#ef4444',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    padding: '0.25rem',
+  },
+  btnAddListItem: {
+    background: 'transparent',
+    border: '1px dashed rgba(99, 102, 241, 0.5)',
+    color: '#6366f1',
+    padding: '0.4rem 0.75rem',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    textAlign: 'center',
+    transition: 'all 0.2s',
+  },
+  quoteBlockEditor: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    borderLeft: '4px solid #6366f1',
+    paddingLeft: '1rem',
+  },
+  quoteTextarea: {
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.75rem',
+    color: '#fff',
+    fontSize: '1rem',
+    fontStyle: 'italic',
+    lineHeight: 1.6,
+    resize: 'vertical',
+    outline: 'none',
+  },
+  quoteAuthor: {
+    background: 'rgba(15, 15, 35, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '6px',
+    padding: '0.5rem 0.75rem',
+    color: '#94a3b8',
+    fontSize: '0.9rem',
+    outline: 'none',
+  },
+  dividerBlock: {
+    padding: '1rem 0',
+  },
+  dividerBlockHr: {
+    border: 'none',
+    height: '1px',
+    background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent)',
+  },
+  // Preview styles
+  previewText: {
+    fontSize: '1rem',
+    lineHeight: 1.7,
+    color: '#e2e8f0',
+    marginBottom: '1rem',
+  },
+  previewHeading: {
+    color: '#fff',
+    fontWeight: 700,
+    marginTop: '1.5rem',
+    marginBottom: '1rem',
+  },
+  previewCode: {
+    background: 'rgba(15, 15, 35, 0.9)',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    marginBottom: '1rem',
+  },
+  codeLangBadge: {
+    display: 'inline-block',
+    background: 'rgba(99, 102, 241, 0.3)',
+    color: '#a5b4fc',
+    padding: '0.25rem 0.75rem',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    borderRadius: '0 0 6px 0',
+  },
+  previewCodePre: {
+    padding: '1rem',
+    margin: 0,
+    overflow: 'auto',
+  },
+  previewCodeCode: {
+    fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+    fontSize: '0.9rem',
+    color: '#e2e8f0',
+  },
+  previewImage: {
+    marginBottom: '1.5rem',
+    textAlign: 'center',
+  },
+  previewImageImg: {
+    maxWidth: '100%',
+    borderRadius: '8px',
+  },
+  previewImageCaption: {
+    color: '#94a3b8',
+    fontSize: '0.9rem',
+    fontStyle: 'italic',
+    marginTop: '0.5rem',
+  },
+  previewVideo: {
+    marginBottom: '1.5rem',
+  },
+  previewCallout: {
+    borderLeft: '4px solid',
+    borderRadius: '6px',
+    padding: '1rem',
+    marginBottom: '1rem',
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '0.75rem',
+  },
+  calloutPreviewIcon: {
+    fontSize: '1.25rem',
+    lineHeight: 1,
+  },
+  previewCalloutP: {
+    margin: 0,
+    color: '#e2e8f0',
+    lineHeight: 1.6,
+  },
+  previewDivider: {
+    border: 'none',
+    height: '1px',
+    background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent)',
+    margin: '1.5rem 0',
+  },
+  previewList: {
+    marginBottom: '1rem',
+    paddingLeft: '1.5rem',
+    color: '#e2e8f0',
+    lineHeight: 1.8,
+  },
+  previewQuote: {
+    borderLeft: '4px solid #6366f1',
+    paddingLeft: '1.5rem',
+    margin: '1.5rem 0',
+    fontStyle: 'italic',
+    color: '#e2e8f0',
+  },
+  previewQuoteP: {
+    margin: 0,
+    fontSize: '1.1rem',
+    lineHeight: 1.6,
+  },
+  previewQuoteCite: {
+    display: 'block',
+    marginTop: '0.75rem',
+    color: '#94a3b8',
+    fontStyle: 'normal',
+    fontSize: '0.9rem',
+  },
+  mdInlineCode: {
+    background: 'rgba(99, 102, 241, 0.2)',
+    color: '#a5b4fc',
+    padding: '0.15rem 0.4rem',
+    borderRadius: '4px',
+    fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+    fontSize: '0.85em',
+  },
+};
 
 // ---- Block types ----
 const BLOCK_TYPES = [
@@ -346,56 +1470,56 @@ const CourseEditor = () => {
 
   // ---- Render ----
   if (isLoading) return <LoadingSpinner />;
-  if (error) return <div className="editor-error">Error: {error}</div>;
-  if (!course) return <div className="editor-error">Course not found</div>;
+  if (error) return <div style={styles.editorError}>Error: {error}</div>;
+  if (!course) return <div style={styles.editorError}>Course not found</div>;
 
   const totalLessons = course.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 0;
 
   return (
-    <div className="course-editor">
+    <div style={styles.courseEditor}>
       {/* Top Bar */}
-      <div className="editor-topbar">
-        <div className="topbar-left">
-          <button onClick={() => navigate('/instructor/dashboard')} className="btn-back-editor">
+      <div style={styles.editorTopbar}>
+        <div style={styles.topbarLeft}>
+          <button onClick={() => navigate('/instructor/dashboard')} style={styles.btnBackEditor}>
             ← Back
           </button>
-          <div className="course-info-bar">
-            <h2>{course.title}</h2>
-            <span className={`pub-badge ${course.is_published ? 'published' : 'draft'}`}>
+          <div style={styles.courseInfoBar}>
+            <h2 style={styles.courseInfoBarH2}>{course.title}</h2>
+            <span style={{...styles.pubBadge, ...(course.is_published ? styles.pubBadgePublished : styles.pubBadgeDraft)}}>
               {course.is_published ? '● Live' : '○ Draft'}
             </span>
           </div>
         </div>
-        <div className="topbar-right">
-          <span className="lesson-count">{totalLessons} lesson{totalLessons !== 1 ? 's' : ''}</span>
-          {saveStatus && <span className={`save-status ${saveStatus.includes('Error') ? 'error' : 'success'}`}>{saveStatus}</span>}
-          {hasChanges && <span className="unsaved-dot" title="Unsaved changes">●</span>}
+        <div style={styles.topbarRight}>
+          <span style={styles.lessonCount}>{totalLessons} lesson{totalLessons !== 1 ? 's' : ''}</span>
+          {saveStatus && <span style={{...styles.saveStatus, ...(saveStatus.includes('Error') ? styles.saveStatusError : styles.saveStatusSuccess)}}>{saveStatus}</span>}
+          {hasChanges && <span style={styles.unsavedDot} title="Unsaved changes">●</span>}
           <button
             onClick={handleTogglePublish}
             disabled={isPublishing}
-            className={`btn-publish ${course.is_published ? 'unpublish' : ''}`}
+            style={{...styles.btnPublish, ...(course.is_published ? styles.btnPublishUnpublish : {})}}
           >
             {isPublishing ? '...' : course.is_published ? 'Unpublish' : '🚀 Publish'}
           </button>
         </div>
       </div>
 
-      <div className="editor-layout">
+      <div style={styles.editorLayout}>
         {/* ---- Sidebar ---- */}
-        <aside className="editor-sidebar">
-          <div className="sidebar-header">
-            <h3>📚 Course Content</h3>
+        <aside style={styles.editorSidebar}>
+          <div style={styles.sidebarHeader}>
+            <h3 style={styles.sidebarHeaderH3}>📚 Course Content</h3>
           </div>
 
-          <div className="modules-tree">
+          <div style={styles.modulesTree}>
             {course.modules?.map((mod, mIdx) => (
-              <div key={mod.id} className="module-tree-item">
-                <div className="module-tree-header" onClick={() => toggleModuleCollapse(mod.id)}>
-                  <span className={`collapse-arrow ${collapsedModules[mod.id] ? 'collapsed' : ''}`}>▾</span>
-                  <span className="module-tree-number">M{mIdx + 1}</span>
+              <div key={mod.id} style={styles.moduleTreeItem}>
+                <div style={styles.moduleTreeHeader} onClick={() => toggleModuleCollapse(mod.id)}>
+                  <span style={{...styles.collapseArrow, ...(collapsedModules[mod.id] ? styles.collapseArrowCollapsed : {})}}>▾</span>
+                  <span style={styles.moduleTreeNumber}>M{mIdx + 1}</span>
                   {editingModuleId === mod.id ? (
                     <input
-                      className="module-rename-input"
+                      style={styles.moduleRenameInput}
                       value={editModuleTitle}
                       onChange={(e) => setEditModuleTitle(e.target.value)}
                       onBlur={() => handleRenameModule(mod.id)}
@@ -407,31 +1531,31 @@ const CourseEditor = () => {
                       onClick={(e) => e.stopPropagation()}
                     />
                   ) : (
-                    <span className="module-tree-title">{mod.title}</span>
+                    <span style={styles.moduleTreeTitle}>{mod.title}</span>
                   )}
-                  <div className="module-actions" onClick={(e) => e.stopPropagation()}>
+                  <div style={styles.moduleActions} onClick={(e) => e.stopPropagation()}>
                     <button
-                      className="btn-icon-sm"
+                      style={styles.btnIconSm}
                       onClick={() => { setEditingModuleId(mod.id); setEditModuleTitle(mod.title); }}
                       title="Rename"
                     >✏️</button>
-                    <button className="btn-icon-sm delete-icon" onClick={() => handleDeleteModule(mod.id)} title="Delete">×</button>
+                    <button style={{...styles.btnIconSm, ...styles.btnIconSmDelete}} onClick={() => handleDeleteModule(mod.id)} title="Delete">×</button>
                   </div>
                 </div>
 
                 {!collapsedModules[mod.id] && (
-                  <div className="lessons-tree">
+                  <div style={styles.lessonsTree}>
                     {mod.lessons?.map((lesson, lIdx) => (
                       <div
                         key={lesson.id}
-                        className={`lesson-tree-item ${activeLesson?.id === lesson.id ? 'active' : ''}`}
+                        style={{...styles.lessonTreeItem, ...(activeLesson?.id === lesson.id ? styles.lessonTreeItemActive : {})}}
                         onClick={() => openLesson({ ...lesson, module_id: mod.id })}
                       >
-                        <span className="lesson-tree-icon">📄</span>
-                        <span className="lesson-tree-title">{lesson.title}</span>
-                        <span className="lesson-tree-duration">{lesson.duration_minutes || 0}m</span>
+                        <span style={styles.lessonTreeIcon}>📄</span>
+                        <span style={styles.lessonTreeTitle}>{lesson.title}</span>
+                        <span style={styles.lessonTreeDuration}>{lesson.duration_minutes || 0}m</span>
                         <button
-                          className="btn-icon-sm delete-icon"
+                          style={{...styles.btnIconSm, ...styles.btnIconSmDelete}}
                           onClick={(e) => { e.stopPropagation(); handleDeleteLesson(lesson.id); }}
                           title="Delete"
                         >×</button>
@@ -439,8 +1563,9 @@ const CourseEditor = () => {
                     ))}
 
                     {addingLessonToModule === mod.id ? (
-                      <div className="add-lesson-inline">
+                      <div style={styles.addLessonInline}>
                         <input
+                          style={styles.addLessonInlineInput}
                           value={newLessonTitle}
                           onChange={(e) => setNewLessonTitle(e.target.value)}
                           placeholder="Lesson title..."
@@ -450,11 +1575,11 @@ const CourseEditor = () => {
                             if (e.key === 'Escape') { setAddingLessonToModule(null); setNewLessonTitle(''); }
                           }}
                         />
-                        <button onClick={() => handleAddLesson(mod.id)} className="btn-add-inline">+</button>
+                        <button onClick={() => handleAddLesson(mod.id)} style={styles.btnAddInline}>+</button>
                       </div>
                     ) : (
                       <button
-                        className="btn-add-lesson"
+                        style={styles.btnAddLesson}
                         onClick={() => { setAddingLessonToModule(mod.id); setNewLessonTitle(''); }}
                       >
                         + Add Lesson
@@ -466,34 +1591,35 @@ const CourseEditor = () => {
             ))}
           </div>
 
-          <div className="add-module-section">
+          <div style={styles.addModuleSection}>
             <input
+              style={styles.addModuleSectionInput}
               value={newModuleTitle}
               onChange={(e) => setNewModuleTitle(e.target.value)}
               placeholder="New module title..."
               onKeyDown={(e) => { if (e.key === 'Enter') handleAddModule(); }}
               disabled={isAddingModule}
             />
-            <button onClick={handleAddModule} disabled={isAddingModule || !newModuleTitle.trim()} className="btn-add-module">
+            <button onClick={handleAddModule} disabled={isAddingModule || !newModuleTitle.trim()} style={styles.btnAddModule}>
               {isAddingModule ? '...' : '+ Module'}
             </button>
           </div>
         </aside>
 
         {/* ---- Main: Block Editor ---- */}
-        <main className="editor-main">
+        <main style={styles.editorMain}>
           {activeLesson ? (
-            <div className="lesson-editor">
+            <div style={styles.lessonEditor}>
               {/* Lesson header */}
-              <div className="lesson-editor-header">
+              <div style={styles.lessonEditorHeader}>
                 <input
-                  className="lesson-title-input"
+                  style={styles.lessonTitleInput}
                   value={lessonTitle}
                   onChange={(e) => { setLessonTitle(e.target.value); setHasChanges(true); }}
                   placeholder="Lesson Title"
                 />
-                <div className="lesson-meta-row">
-                  <label className="duration-label">
+                <div style={styles.lessonMetaRow}>
+                  <label style={styles.durationLabel}>
                     ⏱️
                     <input
                       type="number"
@@ -501,25 +1627,25 @@ const CourseEditor = () => {
                       max="120"
                       value={lessonDuration}
                       onChange={(e) => { setLessonDuration(e.target.value); setHasChanges(true); }}
-                      className="duration-input"
+                      style={styles.durationInput}
                     />
                     min
                   </label>
-                  <div className="editor-mode-toggle">
+                  <div style={styles.editorModeToggle}>
                     <button
-                      className={`mode-btn ${!previewMode ? 'active' : ''}`}
+                      style={{...styles.modeBtn, ...(!previewMode ? styles.modeBtnActive : {})}}
                       onClick={() => setPreviewMode(false)}
                     >
                       ✏️ Edit
                     </button>
                     <button
-                      className={`mode-btn ${previewMode ? 'active' : ''}`}
+                      style={{...styles.modeBtn, ...(previewMode ? styles.modeBtnActive : {})}}
                       onClick={() => setPreviewMode(true)}
                     >
                       👁️ Preview
                     </button>
                   </div>
-                  <button onClick={handleSaveLesson} disabled={isSaving} className="btn-save-lesson">
+                  <button onClick={handleSaveLesson} disabled={isSaving} style={styles.btnSaveLesson}>
                     {isSaving ? 'Saving...' : '💾 Save'}
                   </button>
                 </div>
@@ -527,17 +1653,17 @@ const CourseEditor = () => {
 
               {previewMode ? (
                 /* ---- Preview mode ---- */
-                <div className="lesson-preview">
-                  <div className="preview-lesson-title">{lessonTitle}</div>
+                <div style={styles.lessonPreview}>
+                  <div style={styles.previewLessonTitle}>{lessonTitle}</div>
                   {blocks.map((block) => (
                     <BlockPreview key={block.id} block={block} />
                   ))}
                 </div>
               ) : (
                 /* ---- Edit mode: Block editor ---- */
-                <div className="blocks-editor">
+                <div style={styles.blocksEditor}>
                   {blocks.map((block, index) => (
-                    <div key={block.id} className="block-wrapper">
+                    <div key={block.id} style={styles.blockWrapper}>
                       <BlockEditor
                         block={block}
                         onChange={(updates) => updateBlock(block.id, updates)}
@@ -550,31 +1676,31 @@ const CourseEditor = () => {
                       />
 
                       {/* Add block button between blocks */}
-                      <div className="block-insert-zone">
+                      <div style={styles.blockInsertZone}>
                         <button
-                          className="btn-insert-block"
+                          style={styles.btnInsertBlock}
                           onClick={() => setShowBlockMenu(showBlockMenu === index ? null : index)}
                           title="Add content block"
                         >
-                          <span className="insert-line" />
-                          <span className="insert-icon">+</span>
-                          <span className="insert-line" />
+                          <span style={styles.insertLine} />
+                          <span style={styles.insertIcon}>+</span>
+                          <span style={styles.insertLine} />
                         </button>
 
                         {showBlockMenu === index && (
-                          <div className="block-menu">
-                            <div className="block-menu-header">Add Content Block</div>
-                            <div className="block-menu-grid">
+                          <div style={styles.blockMenu}>
+                            <div style={styles.blockMenuHeader}>Add Content Block</div>
+                            <div style={styles.blockMenuGrid}>
                               {BLOCK_TYPES.map((bt) => (
                                 <button
                                   key={bt.type}
-                                  className="block-menu-item"
+                                  style={styles.blockMenuItem}
                                   onClick={() => addBlockAfter(index, bt.type)}
                                 >
-                                  <span className="bmi-icon">{bt.icon}</span>
-                                  <div className="bmi-info">
-                                    <span className="bmi-label">{bt.label}</span>
-                                    <span className="bmi-desc">{bt.desc}</span>
+                                  <span style={styles.bmiIcon}>{bt.icon}</span>
+                                  <div style={styles.bmiInfo}>
+                                    <span style={styles.bmiLabel}>{bt.label}</span>
+                                    <span style={styles.bmiDesc}>{bt.desc}</span>
                                   </div>
                                 </button>
                               ))}
@@ -587,18 +1713,18 @@ const CourseEditor = () => {
 
                   {/* Initial add block if empty */}
                   {blocks.length === 0 && (
-                    <div className="empty-blocks">
-                      <p>Click below to add your first content block</p>
-                      <div className="block-menu-grid initial">
+                    <div style={styles.emptyBlocks}>
+                      <p style={styles.emptyBlocksP}>Click below to add your first content block</p>
+                      <div style={styles.blockMenuGridInitial}>
                         {BLOCK_TYPES.map((bt) => (
                           <button
                             key={bt.type}
-                            className="block-menu-item"
+                            style={styles.blockMenuItem}
                             onClick={() => addBlockAfter(-1, bt.type)}
                           >
-                            <span className="bmi-icon">{bt.icon}</span>
-                            <div className="bmi-info">
-                              <span className="bmi-label">{bt.label}</span>
+                            <span style={styles.bmiIcon}>{bt.icon}</span>
+                            <div style={styles.bmiInfo}>
+                              <span style={styles.bmiLabel}>{bt.label}</span>
                             </div>
                           </button>
                         ))}
@@ -610,15 +1736,15 @@ const CourseEditor = () => {
             </div>
           ) : (
             /* ---- Empty state ---- */
-            <div className="editor-empty-state">
-              <div className="empty-icon">✨</div>
-              <h2>Start Building Your Course</h2>
-              <p>Select a lesson from the sidebar or create one to start adding content.</p>
-              <div className="empty-tips">
-                <div className="tip-card"><span>📝</span><div><strong>Rich Text</strong><p>Write formatted text with headings and lists</p></div></div>
-                <div className="tip-card"><span>▶️</span><div><strong>Video Embeds</strong><p>Paste YouTube URLs to embed videos</p></div></div>
-                <div className="tip-card"><span>🖼️</span><div><strong>Images</strong><p>Add images via URL with captions</p></div></div>
-                <div className="tip-card"><span>💻</span><div><strong>Code Blocks</strong><p>Add code with language selection</p></div></div>
+            <div style={styles.editorEmptyState}>
+              <div style={styles.emptyIcon}>✨</div>
+              <h2 style={styles.emptyStateH2}>Start Building Your Course</h2>
+              <p style={styles.emptyStateP}>Select a lesson from the sidebar or create one to start adding content.</p>
+              <div style={styles.emptyTips}>
+                <div style={styles.tipCard}><span style={styles.tipCardSpan}>📝</span><div><strong style={styles.tipCardStrong}>Rich Text</strong><p style={styles.tipCardP}>Write formatted text with headings and lists</p></div></div>
+                <div style={styles.tipCard}><span style={styles.tipCardSpan}>▶️</span><div><strong style={styles.tipCardStrong}>Video Embeds</strong><p style={styles.tipCardP}>Paste YouTube URLs to embed videos</p></div></div>
+                <div style={styles.tipCard}><span style={styles.tipCardSpan}>🖼️</span><div><strong style={styles.tipCardStrong}>Images</strong><p style={styles.tipCardP}>Add images via URL with captions</p></div></div>
+                <div style={styles.tipCard}><span style={styles.tipCardSpan}>💻</span><div><strong style={styles.tipCardStrong}>Code Blocks</strong><p style={styles.tipCardP}>Add code with language selection</p></div></div>
               </div>
             </div>
           )}
@@ -638,23 +1764,23 @@ const BlockEditor = ({ block, onChange, onRemove, onMoveUp, onMoveDown, onDuplic
 
   return (
     <div
-      className={`block-editor block-${block.type}`}
+      style={styles.blockEditor}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
       {/* Block controls */}
-      <div className={`block-controls ${showActions ? 'visible' : ''}`}>
-        <span className="block-type-badge">{blockMeta.icon} {blockMeta.label}</span>
-        <div className="block-control-buttons">
-          {!isFirst && <button onClick={onMoveUp} title="Move up" className="ctrl-btn">↑</button>}
-          {!isLast && <button onClick={onMoveDown} title="Move down" className="ctrl-btn">↓</button>}
-          <button onClick={onDuplicate} title="Duplicate" className="ctrl-btn">⧉</button>
-          <button onClick={onRemove} title="Delete block" className="ctrl-btn danger">🗑️</button>
+      <div style={{...styles.blockControls, ...(showActions ? styles.blockControlsVisible : {})}}>
+        <span style={styles.blockTypeBadge}>{blockMeta.icon} {blockMeta.label}</span>
+        <div style={styles.blockControlButtons}>
+          {!isFirst && <button onClick={onMoveUp} title="Move up" style={styles.ctrlBtn}>↑</button>}
+          {!isLast && <button onClick={onMoveDown} title="Move down" style={styles.ctrlBtn}>↓</button>}
+          <button onClick={onDuplicate} title="Duplicate" style={styles.ctrlBtn}>⧉</button>
+          <button onClick={onRemove} title="Delete block" style={{...styles.ctrlBtn, ...styles.ctrlBtnDanger}}>🗑️</button>
         </div>
       </div>
 
       {/* Block content */}
-      <div className="block-body">
+      <div style={styles.blockBody}>
         {block.type === 'text' && (
           <TextBlockEditor content={block.content} onChange={(content) => onChange({ content })} />
         )}
@@ -673,7 +1799,7 @@ const BlockEditor = ({ block, onChange, onRemove, onMoveUp, onMoveDown, onDuplic
         {block.type === 'callout' && (
           <CalloutBlockEditor content={block.content} calloutType={block.calloutType} onChange={onChange} />
         )}
-        {block.type === 'divider' && <div className="divider-block"><hr /></div>}
+        {block.type === 'divider' && <div style={styles.dividerBlock}><hr style={styles.dividerBlockHr} /></div>}
         {block.type === 'list' && (
           <ListBlockEditor items={block.items} ordered={block.ordered} onChange={onChange} />
         )}
@@ -718,13 +1844,13 @@ const TextBlockEditor = ({ content, onChange }) => {
   };
 
   return (
-    <div className={`text-block-editor ${isFocused ? 'focused' : ''}`}>
-      <div className="text-format-bar">
-        <button onClick={() => applyFormat('bold')} title="Bold (Ctrl+B)" className="fmt-btn"><b>B</b></button>
-        <button onClick={() => applyFormat('italic')} title="Italic" className="fmt-btn"><i>I</i></button>
-        <button onClick={() => applyFormat('strikethrough')} title="Strikethrough" className="fmt-btn"><s>S</s></button>
-        <button onClick={() => applyFormat('code')} title="Inline Code" className="fmt-btn mono">&lt;/&gt;</button>
-        <button onClick={() => applyFormat('link')} title="Link" className="fmt-btn">🔗</button>
+    <div style={{...styles.textBlockEditor, ...(isFocused ? styles.textBlockEditorFocused : {})}}>
+      <div style={styles.textFormatBar}>
+        <button onClick={() => applyFormat('bold')} title="Bold (Ctrl+B)" style={styles.fmtBtn}><b>B</b></button>
+        <button onClick={() => applyFormat('italic')} title="Italic" style={styles.fmtBtn}><i>I</i></button>
+        <button onClick={() => applyFormat('strikethrough')} title="Strikethrough" style={styles.fmtBtn}><s>S</s></button>
+        <button onClick={() => applyFormat('code')} title="Inline Code" style={{...styles.fmtBtn, ...styles.fmtBtnMono}}>&lt;/&gt;</button>
+        <button onClick={() => applyFormat('link')} title="Link" style={styles.fmtBtn}>🔗</button>
       </div>
       <textarea
         ref={ref}
@@ -734,18 +1860,19 @@ const TextBlockEditor = ({ content, onChange }) => {
         onBlur={() => setIsFocused(false)}
         placeholder="Write your text here... Use **bold**, *italic*, `code`"
         rows={4}
+        style={styles.textBlockTextarea}
       />
     </div>
   );
 };
 
 const HeadingBlockEditor = ({ content, level, onChange }) => (
-  <div className="heading-block-editor">
-    <div className="heading-level-selector">
+  <div style={styles.headingBlockEditor}>
+    <div style={styles.headingLevelSelector}>
       {[1, 2, 3, 4].map((l) => (
         <button
           key={l}
-          className={`level-btn ${level === l ? 'active' : ''}`}
+          style={{...styles.levelBtn, ...(level === l ? styles.levelBtnActive : {})}}
           onClick={() => onChange({ level: l })}
         >
           H{l}
@@ -753,7 +1880,7 @@ const HeadingBlockEditor = ({ content, level, onChange }) => (
       ))}
     </div>
     <input
-      className={`heading-input h${level}`}
+      style={{...styles.headingInput, ...(level === 1 ? styles.headingInputH1 : level === 2 ? styles.headingInputH2 : level === 3 ? styles.headingInputH3 : styles.headingInputH4)}}
       value={content}
       onChange={(e) => onChange({ content: e.target.value })}
       placeholder={`Heading ${level}`}
@@ -762,21 +1889,21 @@ const HeadingBlockEditor = ({ content, level, onChange }) => (
 );
 
 const CodeBlockEditor = ({ content, language, onChange }) => (
-  <div className="code-block-editor">
-    <div className="code-header">
+  <div style={styles.codeBlockEditor}>
+    <div style={styles.codeHeader}>
       <select
         value={language}
         onChange={(e) => onChange({ language: e.target.value })}
-        className="lang-select"
+        style={styles.langSelect}
       >
         {CODE_LANGUAGES.map((lang) => (
           <option key={lang} value={lang}>{lang}</option>
         ))}
       </select>
-      <span className="code-label">Code Block</span>
+      <span style={styles.codeLabel}>Code Block</span>
     </div>
     <textarea
-      className="code-textarea"
+      style={styles.codeTextarea}
       value={content}
       onChange={(e) => onChange({ content: e.target.value })}
       placeholder="Paste or write your code here..."
@@ -787,47 +1914,48 @@ const CodeBlockEditor = ({ content, language, onChange }) => (
 );
 
 const ImageBlockEditor = ({ url, alt, caption, onChange }) => (
-  <div className="image-block-editor">
-    <div className="image-inputs">
-      <div className="img-input-row">
-        <span className="input-icon">🖼️</span>
+  <div style={styles.imageBlockEditor}>
+    <div style={styles.imageInputs}>
+      <div style={styles.imgInputRow}>
+        <span style={styles.inputIcon}>🖼️</span>
         <input
           value={url}
           onChange={(e) => onChange({ url: e.target.value })}
           placeholder="Paste image URL (e.g. https://example.com/image.png)"
-          className="img-url-input"
+          style={styles.imgUrlInput}
         />
       </div>
-      <div className="img-input-row">
-        <span className="input-icon">📝</span>
+      <div style={styles.imgInputRow}>
+        <span style={styles.inputIcon}>📝</span>
         <input
           value={alt}
           onChange={(e) => onChange({ alt: e.target.value })}
           placeholder="Alt text (accessibility)"
-          className="img-alt-input"
+          style={styles.imgUrlInput}
         />
       </div>
-      <div className="img-input-row">
-        <span className="input-icon">💬</span>
+      <div style={styles.imgInputRow}>
+        <span style={styles.inputIcon}>💬</span>
         <input
           value={caption}
           onChange={(e) => onChange({ caption: e.target.value })}
           placeholder="Caption (optional)"
-          className="img-caption-input"
+          style={styles.imgUrlInput}
         />
       </div>
     </div>
     {url && (
-      <div className="image-preview-container">
+      <div style={styles.imagePreviewContainer}>
         <img
           src={url}
           alt={alt || 'Image'}
+          style={styles.imagePreviewImg}
           onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
         />
-        <div className="img-error" style={{ display: 'none' }}>
+        <div style={{ ...styles.imgError, display: 'none' }}>
           ⚠️ Could not load image — check the URL
         </div>
-        {caption && <p className="img-caption">{caption}</p>}
+        {caption && <p style={styles.imgCaption}>{caption}</p>}
       </div>
     )}
   </div>
@@ -837,42 +1965,43 @@ const VideoBlockEditor = ({ url, caption, onChange }) => {
   const embedUrl = getYouTubeEmbedUrl(url);
 
   return (
-    <div className="video-block-editor">
-      <div className="video-input-row">
-        <span className="input-icon">▶️</span>
+    <div style={styles.videoBlockEditor}>
+      <div style={styles.videoInputRow}>
+        <span style={styles.inputIcon}>▶️</span>
         <input
           value={url}
           onChange={(e) => onChange({ url: e.target.value })}
           placeholder="Paste YouTube URL (e.g. https://youtube.com/watch?v=...)"
-          className="video-url-input"
+          style={styles.videoUrlInput}
         />
       </div>
-      <div className="video-input-row">
-        <span className="input-icon">💬</span>
+      <div style={styles.videoInputRow}>
+        <span style={styles.inputIcon}>💬</span>
         <input
           value={caption}
           onChange={(e) => onChange({ caption: e.target.value })}
           placeholder="Video caption (optional)"
+          style={styles.videoUrlInput}
         />
       </div>
       {embedUrl ? (
-        <div className="video-embed-container">
+        <div style={styles.videoEmbedContainer}>
           <iframe
             src={embedUrl}
             title="Video embed"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            className="video-iframe"
+            style={styles.videoIframe}
           />
-          {caption && <p className="video-caption">{caption}</p>}
+          {caption && <p style={styles.videoCaption}>{caption}</p>}
         </div>
       ) : url ? (
-        <div className="video-error">
+        <div style={styles.videoError}>
           ⚠️ Could not parse video URL. Supported: YouTube links
         </div>
       ) : (
-        <div className="video-placeholder">
-          <span>▶️</span>
+        <div style={styles.videoPlaceholder}>
+          <span style={styles.videoPlaceholderSpan}>▶️</span>
           <p>Paste a YouTube link above to embed a video</p>
         </div>
       )}
@@ -881,15 +2010,15 @@ const VideoBlockEditor = ({ url, caption, onChange }) => {
 };
 
 const CalloutBlockEditor = ({ content, calloutType, onChange }) => {
-  const style = CALLOUT_STYLES.find((s) => s.type === calloutType) || CALLOUT_STYLES[0];
+  const calloutStyle = CALLOUT_STYLES.find((s) => s.type === calloutType) || CALLOUT_STYLES[0];
 
   return (
-    <div className="callout-block-editor" style={{ borderLeftColor: style.color }}>
-      <div className="callout-type-selector">
+    <div style={{...styles.calloutBlockEditor, borderLeftColor: calloutStyle.color}}>
+      <div style={styles.calloutTypeSelector}>
         {CALLOUT_STYLES.map((s) => (
           <button
             key={s.type}
-            className={`callout-type-btn ${calloutType === s.type ? 'active' : ''}`}
+            style={{...styles.calloutTypeBtn, ...(calloutType === s.type ? styles.calloutTypeBtnActive : {})}}
             onClick={() => onChange({ calloutType: s.type })}
             title={s.label}
           >
@@ -897,13 +2026,14 @@ const CalloutBlockEditor = ({ content, calloutType, onChange }) => {
           </button>
         ))}
       </div>
-      <div className="callout-content-area">
-        <span className="callout-icon">{style.icon}</span>
+      <div style={styles.calloutContentArea}>
+        <span style={styles.calloutIcon}>{calloutStyle.icon}</span>
         <textarea
           value={content}
           onChange={(e) => onChange({ content: e.target.value })}
-          placeholder={`Write your ${style.label.toLowerCase()} here...`}
+          placeholder={`Write your ${calloutStyle.label.toLowerCase()} here...`}
           rows={2}
+          style={styles.calloutTextarea}
         />
       </div>
     </div>
@@ -925,53 +2055,54 @@ const ListBlockEditor = ({ items = [''], ordered, onChange }) => {
   };
 
   return (
-    <div className="list-block-editor">
-      <div className="list-type-toggle">
-        <button className={`list-type-btn ${!ordered ? 'active' : ''}`} onClick={() => onChange({ ordered: false })}>
+    <div style={styles.listBlockEditor}>
+      <div style={styles.listTypeToggle}>
+        <button style={{...styles.listTypeBtn, ...(!ordered ? styles.listTypeBtnActive : {})}} onClick={() => onChange({ ordered: false })}>
           • Bullet
         </button>
-        <button className={`list-type-btn ${ordered ? 'active' : ''}`} onClick={() => onChange({ ordered: true })}>
+        <button style={{...styles.listTypeBtn, ...(ordered ? styles.listTypeBtnActive : {})}} onClick={() => onChange({ ordered: true })}>
           1. Numbered
         </button>
       </div>
-      <div className="list-items">
+      <div style={styles.listItems}>
         {items.map((item, i) => (
-          <div key={i} className="list-item-row">
-            <span className="list-marker">{ordered ? `${i + 1}.` : '•'}</span>
+          <div key={i} style={styles.listItemRow}>
+            <span style={styles.listMarker}>{ordered ? `${i + 1}.` : '•'}</span>
             <input
               value={item}
               onChange={(e) => updateItem(i, e.target.value)}
               placeholder="List item..."
+              style={styles.listItemInput}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') { e.preventDefault(); addItem(); }
                 if (e.key === 'Backspace' && !item && items.length > 1) { e.preventDefault(); removeItem(i); }
               }}
             />
             {items.length > 1 && (
-              <button className="btn-remove-list-item" onClick={() => removeItem(i)}>×</button>
+              <button style={styles.btnRemoveListItem} onClick={() => removeItem(i)}>×</button>
             )}
           </div>
         ))}
       </div>
-      <button className="btn-add-list-item" onClick={addItem}>+ Add item</button>
+      <button style={styles.btnAddListItem} onClick={addItem}>+ Add item</button>
     </div>
   );
 };
 
 const QuoteBlockEditor = ({ content, author, onChange }) => (
-  <div className="quote-block-editor">
+  <div style={styles.quoteBlockEditor}>
     <textarea
       value={content}
       onChange={(e) => onChange({ content: e.target.value })}
       placeholder="Enter quote text..."
       rows={3}
-      className="quote-textarea"
+      style={styles.quoteTextarea}
     />
     <input
       value={author}
       onChange={(e) => onChange({ author: e.target.value })}
       placeholder="— Author (optional)"
-      className="quote-author"
+      style={styles.quoteAuthor}
     />
   </div>
 );
@@ -982,56 +2113,56 @@ const QuoteBlockEditor = ({ content, author, onChange }) => (
 const BlockPreview = ({ block }) => {
   switch (block.type) {
     case 'text':
-      return <div className="preview-text">{renderInlineMarkdown(block.content)}</div>;
+      return <div style={styles.previewText}>{renderInlineMarkdown(block.content)}</div>;
     case 'heading': {
       const Tag = `h${block.level || 2}`;
-      return <Tag className="preview-heading">{block.content}</Tag>;
+      return <Tag style={styles.previewHeading}>{block.content}</Tag>;
     }
     case 'code':
       return (
-        <div className="preview-code">
-          {block.language && <span className="code-lang-badge">{block.language}</span>}
-          <pre><code>{block.content}</code></pre>
+        <div style={styles.previewCode}>
+          {block.language && <span style={styles.codeLangBadge}>{block.language}</span>}
+          <pre style={styles.previewCodePre}><code style={styles.previewCodeCode}>{block.content}</code></pre>
         </div>
       );
     case 'image':
       return block.url ? (
-        <figure className="preview-image">
-          <img src={block.url} alt={block.alt || ''} />
-          {block.caption && <figcaption>{block.caption}</figcaption>}
+        <figure style={styles.previewImage}>
+          <img src={block.url} alt={block.alt || ''} style={styles.previewImageImg} />
+          {block.caption && <figcaption style={styles.previewImageCaption}>{block.caption}</figcaption>}
         </figure>
       ) : null;
     case 'video': {
       const embedUrl = getYouTubeEmbedUrl(block.url);
       return embedUrl ? (
-        <div className="preview-video">
-          <iframe src={embedUrl} title="Video" allowFullScreen className="video-iframe" />
-          {block.caption && <p className="video-caption">{block.caption}</p>}
+        <div style={styles.previewVideo}>
+          <iframe src={embedUrl} title="Video" allowFullScreen style={styles.videoIframe} />
+          {block.caption && <p style={styles.videoCaption}>{block.caption}</p>}
         </div>
       ) : null;
     }
     case 'callout': {
-      const style = CALLOUT_STYLES.find((s) => s.type === block.calloutType) || CALLOUT_STYLES[0];
+      const calloutStyle = CALLOUT_STYLES.find((s) => s.type === block.calloutType) || CALLOUT_STYLES[0];
       return (
-        <div className="preview-callout" style={{ borderLeftColor: style.color, background: style.color + '10' }}>
-          <span className="callout-preview-icon">{style.icon}</span>
-          <p>{block.content}</p>
+        <div style={{ ...styles.previewCallout, borderLeftColor: calloutStyle.color, background: calloutStyle.color + '10' }}>
+          <span style={styles.calloutPreviewIcon}>{calloutStyle.icon}</span>
+          <p style={styles.previewCalloutP}>{block.content}</p>
         </div>
       );
     }
     case 'divider':
-      return <hr className="preview-divider" />;
+      return <hr style={styles.previewDivider} />;
     case 'list':
       return block.ordered ? (
-        <ol className="preview-list">{block.items?.map((item, i) => <li key={i}>{item}</li>)}</ol>
+        <ol style={styles.previewList}>{block.items?.map((item, i) => <li key={i}>{item}</li>)}</ol>
       ) : (
-        <ul className="preview-list">{block.items?.map((item, i) => <li key={i}>{item}</li>)}</ul>
+        <ul style={styles.previewList}>{block.items?.map((item, i) => <li key={i}>{item}</li>)}</ul>
       );
     case 'quote':
       return (
-        <blockquote className="preview-quote">
-          <p>{block.content}</p>
-          {block.author && <cite>— {block.author}</cite>}
+        <blockquote style={styles.previewQuote}>
+          <p style={styles.previewQuoteP}>{block.content}</p>
+          {block.author && <cite style={styles.previewQuoteCite}>— {block.author}</cite>}
         </blockquote>
       );
     default:
@@ -1055,7 +2186,7 @@ const renderInlineMarkdown = (text) => {
       if (match) {
         const idx = match.index;
         if (idx > 0) parts.push(<span key={key++}>{remaining.substring(0, idx)}</span>);
-        parts.push(<code key={key++} className="md-inline-code">{match[1]}</code>);
+        parts.push(<code key={key++} style={styles.mdInlineCode}>{match[1]}</code>);
         remaining = remaining.substring(idx + match[0].length);
         continue;
       }
